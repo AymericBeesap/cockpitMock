@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cockpit réservations magasin - Launchpad local</title>
+
+    <script type="text/javascript">
+        // Launchpad local : chaque entrée d'« applications » joue le rôle d'un target mapping.
+        // Dans le Launchpad réel, ces mappings sont créés dans le catalogue Z du projet (§E2).
+        window["sap-ushell-config"] = {
+            defaultRenderer: "fiori2",
+            bootstrapPlugins: {
+                "RuntimeAuthoringPlugin": {
+                    component: "sap.ushell.plugins.rta",
+                    config: {
+                        validateAppVersion: false
+                    }
+                }
+            },
+            renderers: {
+                fiori2: {
+                    componentData: {
+                        config: {
+                            enableSearch: false,
+                            rootIntent: "Shell-home"
+                        }
+                    }
+                }
+            },
+            applications: {
+                // ---- applications du projet : navigations opérationnelles
+                "ResaCockpit-display": {
+                    title: "Cockpit réservations magasin",
+                    description: "Réservation, DA, commande d'achat",
+                    additionalInformation: "SAPUI5.Component=zovp.resacockpit",
+                    applicationType: "URL",
+                    url: "../"
+                },
+                "ResaChain-track": {
+                    title: "Suivi des réservations",
+                    description: "Réservation, DA, commande",
+                    additionalInformation: "SAPUI5.Component=zlr.resatracking",
+                    applicationType: "URL",
+                    url: "/apps/resatracking"
+                },
+                "ResaIdoc-monitor": {
+                    title: "Monitoring des IDocs",
+                    description: "Réservations magasin en erreur",
+                    additionalInformation: "SAPUI5.Component=zlr.resaidoc",
+                    applicationType: "URL",
+                    url: "/apps/resaidoc"
+                },
+
+                // ---- TODO NAVIGATION : cibles hors projet, à créer dans le Launchpad réel.
+                // En local, elles ouvrent une page indiquant quoi configurer (navPlaceholder/targets.json).
+                "PurchaseRequisition-displayFactSheet": {
+                    title: "À configurer : fiche demande d'achat",
+                    description: "Target mapping SAP (§D2)",
+                    additionalInformation: "SAPUI5.Component=zresa.navplaceholder",
+                    applicationType: "URL",
+                    url: "./navPlaceholder"
+                },
+                "PurchaseOrder-displayFactSheet": {
+                    title: "À configurer : fiche commande d'achat",
+                    description: "Target mapping SAP (§D2)",
+                    additionalInformation: "SAPUI5.Component=zresa.navplaceholder",
+                    applicationType: "URL",
+                    url: "./navPlaceholder"
+                },
+                "PurchaseRequisition-convertAuto": {
+                    title: "À configurer : ME59N",
+                    description: "Target mapping transaction (§D3)",
+                    additionalInformation: "SAPUI5.Component=zresa.navplaceholder",
+                    applicationType: "URL",
+                    url: "./navPlaceholder"
+                }
+            }
+        };
+    </script>
+
+    <script src="../test-resources/sap/ushell/bootstrap/sandbox.js" id="sap-ushell-bootstrap"></script>
+
+    <script id="sap-ui-bootstrap"
+        src="../resources/sap-ui-core.js"
+        data-sap-ui-libs="sap.m, sap.ushell, sap.ovp, sap.ui.comp, sap.viz"
+        data-sap-ui-async="true"
+        data-sap-ui-preload="async"
+        data-sap-ui-theme="sap_fiori_3"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-language="fr"
+        data-sap-ui-resourceroots='{"zovp.resacockpit": "../"}'
+        data-sap-ui-frameOptions="allow"
+        data-sap-ui-flexibilityServices='[{"connector": "LocalStorageConnector", "layers": ["ALL"]}]'>
+    </script>
+
+    <script>
+        sap.ui.getCore().attachInit(function () {
+            sap.ushell.Container.createRenderer().placeAt("content");
+        });
+    </script>
+</head>
+<body class="sapUiBody" id="content"></body>
+</html>

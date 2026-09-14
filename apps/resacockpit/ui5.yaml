@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "4.0"
+metadata:
+  name: zovp.resacockpit
+type: application
+builder:
+  resources:
+    excludes:
+      - /localService/**
+      - /test/**
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertErrors: false # à passer à true si le système utilise un certificat auto-signé
+        ui5:
+          path:
+            - /resources
+            - /test-resources
+          url: https://ui5.sap.com
+          version: 1.96.50 # version SAPUI5 de S/4HANA 2021 FPS02 (ne pas prendre la plus récente)
+        backend:
+          - path: /sap
+            url: https://<hote-s4hana>:<port> # TODO : route d'accès des utilisateurs (Gateway embedded)
+            client: "100" # TODO : mandant
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp
+        delay: 300

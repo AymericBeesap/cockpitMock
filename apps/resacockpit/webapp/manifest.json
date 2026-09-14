@@ -1,0 +1,256 @@
+{
+  "_version": "1.37.0",
+  "sap.app": {
+    "id": "zovp.resacockpit",
+    "type": "application",
+    "i18n": {
+      "bundleUrl": "i18n/i18n.properties",
+      "supportedLocales": [""],
+      "fallbackLocale": ""
+    },
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:ovp",
+      "version": "1.10.0",
+      "toolsId": "resa-cockpit-ovp"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZCRESAKPI_CDS/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "annotations": [
+            "ZCRESAKPI_CDS_VAN"
+          ],
+          "localUri": "localService/ZCRESAKPI_CDS/metadata.xml"
+        }
+      },
+      "ZCRESAKPI_CDS_VAN": {
+        "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESAKPI_CDS_VAN',Version='0001')/$value/",
+        "type": "ODataAnnotation",
+        "settings": {
+          "localUri": "localService/ZCRESAKPI_CDS/annotations.xml"
+        }
+      },
+      "idocService": {
+        "uri": "/sap/opu/odata/sap/ZCRESAIDKPI_CDS/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "annotations": [
+            "ZCRESAIDKPI_CDS_VAN"
+          ],
+          "localUri": "localService/ZCRESAIDKPI_CDS/metadata.xml"
+        }
+      },
+      "ZCRESAIDKPI_CDS_VAN": {
+        "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESAIDKPI_CDS_VAN',Version='0001')/$value/",
+        "type": "ODataAnnotation",
+        "settings": {
+          "localUri": "localService/ZCRESAIDKPI_CDS/annotations.xml"
+        }
+      },
+      "trackingService": {
+        "uri": "/sap/opu/odata/sap/ZCRESATRACK_CDS/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "annotations": [
+            "ZCRESATRACK_CDS_VAN"
+          ],
+          "localUri": "../../resatracking/webapp/localService/ZCRESATRACK_CDS/metadata.xml"
+        }
+      },
+      "ZCRESATRACK_CDS_VAN": {
+        "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESATRACK_CDS_VAN',Version='0001')/$value/",
+        "type": "ODataAnnotation",
+        "settings": {
+          "localUri": "../../resatracking/webapp/localService/ZCRESATRACK_CDS/annotations.xml"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "cockpit-display": {
+          "semanticObject": "ResaCockpit",
+          "action": "display",
+          "title": "{{appTitle}}",
+          "subTitle": "{{appSubTitle}}",
+          "icon": "sap-icon://business-objects-experience",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://business-objects-experience"
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.96.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ushell": {},
+        "sap.ovp": {},
+        "sap.ui.comp": {},
+        "sap.ui.layout": {},
+        "sap.viz": {},
+        "sap.suite.ui.microchart": {
+          "lazy": true
+        }
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties",
+        "settings": {
+          "supportedLocales": [""],
+          "fallbackLocale": ""
+        }
+      },
+      "mainModel": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultCountMode": "Inline"
+        }
+      },
+      "idocModel": {
+        "dataSource": "idocService",
+        "preload": true,
+        "settings": {
+          "defaultCountMode": "Inline"
+        }
+      },
+      "trackingModel": {
+        "dataSource": "trackingService",
+        "preload": true,
+        "settings": {
+          "defaultCountMode": "Inline"
+        }
+      }
+    },
+    "extends": {
+      "extensions": {}
+    }
+  },
+  "sap.ovp": {
+    "globalFilterModel": "mainModel",
+    "globalFilterEntityType": "ZC_ResaChainQueryType",
+    "containerLayout": "resizable",
+    "enableLiveFilter": true,
+    "considerAnalyticalParameters": true,
+    "cards": {
+      "card01_attente": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{card01_title}}",
+          "subTitle": "{{card01_subTitle}}",
+          "entitySet": "ZC_ResaChainQuery",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#AttenteParDivision",
+          "dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#PostesEnAttente",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ParDivision"
+        }
+      },
+      "card02_conversion": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{card02_title}}",
+          "subTitle": "{{card02_subTitle}}",
+          "entitySet": "ZC_ResaChainQuery",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#RepartitionParEtape",
+          "dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#TauxConversion",
+          "selectionAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionVariant#Reservations"
+        }
+      },
+      "card03_idoc": {
+        "model": "idocModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{card03_title}}",
+          "subTitle": "{{card03_subTitle}}",
+          "entitySet": "ZC_ResaIdocQuery",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ErreursParMagasin",
+          "dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#IDocsEnErreur",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ParMagasin"
+        }
+      },
+      "card04_liste": {
+        "model": "trackingModel",
+        "template": "sap.ovp.cards.list",
+        "settings": {
+          "title": "{{card04_title}}",
+          "subTitle": "{{card04_subTitle}}",
+          "listType": "extended",
+          "listFlavor": "standard",
+          "entitySet": "ZC_ResaChainTracking",
+          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem",
+          "selectionAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionVariant#EnAttente",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#Anciens",
+          "identificationAnnotationPath": "com.sap.vocabularies.UI.v1.Identification#Carte"
+        }
+      },
+      "card05_liens": {
+        "model": "trackingModel",
+        "template": "sap.ovp.cards.linklist",
+        "settings": {
+          "title": "{{card05_title}}",
+          "listFlavor": "standard",
+          "staticContent": [
+            {
+              "title": "{{card05_link1_title}}",
+              "subTitle": "{{card05_link1_subTitle}}",
+              "imageUri": "sap-icon://tree",
+              "semanticObject": "ResaChain",
+              "action": "track"
+            },
+            {
+              "title": "{{card05_link2_title}}",
+              "subTitle": "{{card05_link2_subTitle}}",
+              "imageUri": "sap-icon://message-error",
+              "semanticObject": "ResaIdoc",
+              "action": "monitor"
+            },
+            {
+              "title": "{{card05_link3_title}}",
+              "subTitle": "{{card05_link3_subTitle}}",
+              "imageUri": "sap-icon://sales-order",
+              "semanticObject": "PurchaseRequisition",
+              "action": "convertAuto"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "analytical"
+  }
+}

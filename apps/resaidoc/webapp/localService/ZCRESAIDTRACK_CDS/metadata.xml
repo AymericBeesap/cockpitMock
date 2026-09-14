@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZCRESAIDTRACK_CDS" xml:lang="fr" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="ZC_ResaIdocTrackingType" sap:label="Monitoring détaillé des IDocs de réservation" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="IDocNumber"/>
+                </Key>
+                <Property Name="IDocNumber" Type="Edm.String" Nullable="false" MaxLength="16" sap:display-format="NonNegative" sap:label="N° IDoc"/>
+                <Property Name="MessageType" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Type de message"/>
+                <Property Name="IDocType" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Type de base"/>
+                <Property Name="SenderPartner" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Magasin émetteur"/>
+                <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date de réception"/>
+                <Property Name="CreationTime" Type="Edm.Time" Precision="0" sap:label="Heure de réception" sap:filterable="false"/>
+                <Property Name="IDocStatus" Type="Edm.String" MaxLength="2" sap:text="IDocStatusText" sap:label="Statut IDoc"/>
+                <Property Name="IDocStatusText" Type="Edm.String" MaxLength="70" sap:label="Libellé du statut" sap:filterable="false"/>
+                <Property Name="IntegrationStatus" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Statut d'intégration"/>
+                <Property Name="StatusCriticality" Type="Edm.Int32" sap:label="Criticité" sap:filterable="false"/>
+                <Property Name="MessageClass" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Classe de message" sap:filterable="false"/>
+                <Property Name="MessageNumber" Type="Edm.String" MaxLength="3" sap:label="N° de message" sap:filterable="false"/>
+                <Property Name="MessageText" Type="Edm.String" MaxLength="220" sap:label="Message" sap:filterable="false"/>
+            </EntityType>
+            <EntityContainer Name="ZCRESAIDTRACK_CDS_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="ZC_ResaIdocTracking" EntityType="ZCRESAIDTRACK_CDS.ZC_ResaIdocTrackingType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+            </EntityContainer>
+            <atom:link rel="self" href="./sap/ZCRESAIDTRACK_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="./sap/ZCRESAIDTRACK_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

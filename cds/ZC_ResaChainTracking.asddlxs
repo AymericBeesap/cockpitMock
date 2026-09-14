@@ -1,0 +1,131 @@
+@Metadata.layer: #CORE
+
+-- Fusion des §A7.2 (List Report / page objet) et §D2 (navigation) du MO :
+-- une seule extension de métadonnées par couche est autorisée par vue.
+
+@UI.headerInfo: { typeName:       'Poste de la chaîne',
+                  typeNamePlural: 'Suivi des réservations',
+                  title:       { type: #STANDARD, value: 'PurchaseRequisition' },
+                  description: { value: 'PurchaseRequisitionItemText' } }
+
+@UI.facet: [ { id: 'Origine', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpOrigine',
+               label: 'Origine de la demande', position: 10 },
+             { id: 'Demande', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpDemande',
+               label: 'Demande d''achat', position: 20 },
+             { id: 'Commande', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpCommande',
+               label: 'Commande d''achat', position: 30 } ]
+
+-- Carte card04_liste : postes non convertis, les plus anciens en premier
+@UI.selectionVariant: [ { qualifier: 'EnAttente',
+                          text: 'Postes en attente de commande',
+                          filter: 'ChainStage EQ "PR"' } ]
+
+@UI.presentationVariant: [ { qualifier: 'Anciens',
+                             sortOrder: [ { by: 'PurReqDate', direction: #ASC } ],
+                             visualizations: [ { type: #AS_LINEITEM } ] } ]
+
+annotate view ZC_ResaChainTracking with
+{
+  @UI.hidden: true
+  ChainCriticality;
+
+  @UI.hidden: true
+  OriginTypeText;
+
+  @UI.hidden: true
+  ChainStageText;
+
+  -- Navigation : bouton « Cockpit » de la barre d'outils (ResaCockpit-display, inbound du manifeste
+  -- de zovp.resacockpit ; target mapping à créer dans le catalogue Z, §E2)
+  @UI: { lineItem:       [ { position: 10, label: 'Réservation', importance: #HIGH },
+                           { type: #FOR_INTENT_BASED_NAVIGATION, requiresContext: false,
+                             semanticObject: 'ResaCockpit', semanticObjectAction: 'display',
+                             label: 'Cockpit' } ],
+         selectionField: [ { position: 10 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 10 } ]
+  Reservation;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 5, label: 'Origine' } ]
+  @UI.textArrangement: #TEXT_ONLY
+  OriginType;
+
+  @UI: { lineItem:       [ { position: 20, label: 'Commande client' } ],
+         selectionField: [ { position: 20 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 20 } ]
+  SalesOrder;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 30 } ]
+  SalesOrderItem;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 40 } ]
+  SalesOrderItemText;
+
+  @UI: { lineItem:       [ { position: 30, label: 'Demande d''achat', importance: #HIGH } ],
+         selectionField: [ { position: 30 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpDemande', position: 10 } ]
+  -- TODO NAVIGATION (§D2) : objet sémantique et action de la fiche SAP à relever dans le
+  -- Launchpad Designer, catalogue SAP à ajouter au rôle. Pas de cible en local (page de substitution).
+  -- L'entrée qualifiée « Carte » (ResaChain-track) vise l'inbound du manifeste de zlr.resatracking.
+  @UI.identification: [ { position: 10,
+                          type: #WITH_INTENT_BASED_NAVIGATION,
+                          semanticObject: 'PurchaseRequisition',
+                          semanticObjectAction: 'displayFactSheet',
+                          -- determining : SAPUI5 1.96 n'affiche les navigations d'Identification
+                          -- de la page objet V2 que dans le pied de page
+                          label: 'Afficher la demande d''achat', determining: true },
+                        -- Ajout : navigation de la carte card04_liste vers la page objet du suivi
+                        { qualifier: 'Carte', position: 10,
+                          type: #WITH_INTENT_BASED_NAVIGATION,
+                          semanticObject: 'ResaChain',
+                          semanticObjectAction: 'track',
+                          label: 'Ouvrir le suivi détaillé' } ]
+  PurchaseRequisition;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpDemande', position: 20 } ]
+  PurchaseRequisitionItem;
+
+  @UI: { lineItem: [ { position: 40, label: 'Date de DA' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpDemande', position: 30 } ]
+  PurReqDate;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpDemande', position: 40 } ]
+  RequestedQuantity;
+
+  @UI: { lineItem:       [ { position: 50, label: 'Commande d''achat',
+                             criticality: 'ChainCriticality', importance: #HIGH } ],
+         selectionField: [ { position: 40 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpCommande', position: 10 } ]
+  -- TODO NAVIGATION (§D2) : même relevé pour la fiche de commande d'achat.
+  @UI.identification: [ { position: 20,
+                          type: #WITH_INTENT_BASED_NAVIGATION,
+                          semanticObject: 'PurchaseOrder',
+                          semanticObjectAction: 'displayFactSheet',
+                          label: 'Afficher la commande d''achat', determining: true } ]
+  PurchaseOrder;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpCommande', position: 20 } ]
+  PurchaseOrderItem;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpCommande', position: 30 } ]
+  PurchaseOrderItemText;
+
+  @UI: { lineItem:       [ { position: 60, label: 'Étape',
+                             criticality: 'ChainCriticality' } ],
+         selectionField: [ { position: 50 } ] }
+  @UI.textArrangement: #TEXT_ONLY
+  ChainStage;
+
+  @UI: { lineItem:       [ { position: 70, label: 'Division' } ],
+         selectionField: [ { position: 60 } ] }
+  Plant;
+
+  @UI: { lineItem: [ { position: 80, label: 'Article', importance: #LOW } ] }
+  Material;
+
+  @UI: { lineItem: [ { position: 90, label: 'Montant' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpDemande', position: 50 } ]
+  ItemAmount;
+}

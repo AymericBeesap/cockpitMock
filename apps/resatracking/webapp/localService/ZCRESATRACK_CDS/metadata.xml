@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZCRESATRACK_CDS" xml:lang="fr" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="ZC_ResaChainTrackingType" sap:label="Suivi détaillé de la chaîne" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="PurchaseRequisition"/>
+                    <PropertyRef Name="PurchaseRequisitionItem"/>
+                </Key>
+                <Property Name="PurchaseRequisition" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Demande d'achat"/>
+                <Property Name="PurchaseRequisitionItem" Type="Edm.String" Nullable="false" MaxLength="5" sap:display-format="NonNegative" sap:label="Poste de DA"/>
+                <Property Name="Reservation" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Réservation"/>
+                <Property Name="SalesOrder" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Commande client"/>
+                <Property Name="SalesOrderItem" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Poste commande client"/>
+                <Property Name="SalesOrderItemText" Type="Edm.String" MaxLength="40" sap:label="Désignation poste client" sap:filterable="false"/>
+                <Property Name="PurchaseOrder" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Commande d'achat"/>
+                <Property Name="PurchaseOrderItem" Type="Edm.String" MaxLength="5" sap:display-format="NonNegative" sap:label="Poste de commande"/>
+                <Property Name="PurchaseOrderItemText" Type="Edm.String" MaxLength="40" sap:label="Désignation poste commande" sap:filterable="false"/>
+                <Property Name="OriginType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:text="OriginTypeText" sap:label="Origine"/>
+                <Property Name="OriginTypeText" Type="Edm.String" MaxLength="40" sap:label="Libellé origine" sap:filterable="false"/>
+                <Property Name="ChainStage" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:text="ChainStageText" sap:label="Étape"/>
+                <Property Name="ChainStageText" Type="Edm.String" MaxLength="40" sap:label="Libellé étape" sap:filterable="false"/>
+                <Property Name="ChainCriticality" Type="Edm.Int32" sap:label="Criticité" sap:filterable="false"/>
+                <Property Name="Plant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Division"/>
+                <Property Name="PurchasingGroup" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Groupe d'acheteurs"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Article"/>
+                <Property Name="PurchaseRequisitionItemText" Type="Edm.String" MaxLength="40" sap:label="Désignation poste de DA"/>
+                <Property Name="PurReqDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date de DA"/>
+                <Property Name="RequestedQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="BaseUnit" sap:label="Quantité demandée" sap:filterable="false"/>
+                <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:label="Unité de base" sap:semantics="unit-of-measure"/>
+                <Property Name="ItemAmount" Type="Edm.Decimal" Precision="12" Scale="3" sap:unit="Currency" sap:label="Montant" sap:filterable="false"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:label="Devise" sap:semantics="currency-code"/>
+            </EntityType>
+            <EntityContainer Name="ZCRESATRACK_CDS_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="ZC_ResaChainTracking" EntityType="ZCRESATRACK_CDS.ZC_ResaChainTrackingType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+            </EntityContainer>
+            <atom:link rel="self" href="./sap/ZCRESATRACK_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="./sap/ZCRESATRACK_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

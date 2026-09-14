@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "4.0"
+metadata:
+  name: zlr.resatracking
+type: application
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertErrors: false
+        ui5:
+          path:
+            - /resources
+            - /test-resources
+          url: https://ui5.sap.com
+          version: 1.96.50
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35730
+        path: webapp
+        delay: 300
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        mountPath: /
+        services:
+          - urlPath: /sap/opu/odata/sap/ZCRESATRACK_CDS
+            metadataPath: ./webapp/localService/ZCRESATRACK_CDS/metadata.xml
+            mockdataPath: ./webapp/localService/ZCRESATRACK_CDS/data
+            generateMockData: false
+        annotations:
+          - localPath: ./webapp/localService/ZCRESATRACK_CDS/annotations.xml
+            urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESATRACK_CDS_VAN',Version='0001')/$value/

@@ -1,0 +1,78 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: { typeName:       'IDoc de réservation',
+                  typeNamePlural: 'Monitoring des IDocs',
+                  title:       { type: #STANDARD, value: 'IDocNumber' },
+                  description: { value: 'SenderPartner' } }
+
+-- Ajout : tri par défaut, les IDocs les plus récents en premier
+@UI.presentationVariant: [ { sortOrder: [ { by: 'CreationDate', direction: #DESC } ],
+                             visualizations: [ { type: #AS_LINEITEM } ] } ]
+
+-- Ajout : page objet de l'application zlr.resaidoc
+@UI.facet: [ { id: 'Idoc', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpIdoc',
+               label: 'IDoc', position: 10 },
+             { id: 'Message', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpMessage',
+               label: 'Statut et message', position: 20 } ]
+
+annotate view ZC_ResaIdocTracking with
+{
+  @UI.hidden: true
+  StatusCriticality;
+
+  @UI.hidden: true
+  IDocStatusText;
+
+  -- Navigation : bouton « Cockpit » de la barre d'outils (ResaCockpit-display, inbound du manifeste
+  -- de zovp.resacockpit). L'application elle-même répond à ResaIdoc-monitor (inbound de zlr.resaidoc),
+  -- cible de la carte d'intégration et de la carte « Accès rapides » du cockpit.
+  @UI: { lineItem:       [ { position: 10, label: 'N° IDoc', importance: #HIGH },
+                           { type: #FOR_INTENT_BASED_NAVIGATION, requiresContext: false,
+                             semanticObject: 'ResaCockpit', semanticObjectAction: 'display',
+                             label: 'Cockpit' } ],
+         selectionField: [ { position: 10 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpIdoc', position: 10 } ]
+  IDocNumber;
+
+  @UI: { lineItem:       [ { position: 20, label: 'Magasin', importance: #HIGH } ],
+         selectionField: [ { position: 20 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpIdoc', position: 20 } ]
+  SenderPartner;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpIdoc', position: 30 } ]
+  MessageType;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpIdoc', position: 40 } ]
+  IDocType;
+
+  @UI: { lineItem:       [ { position: 30, label: 'Statut',
+                             criticality: 'StatusCriticality', importance: #HIGH } ],
+         selectionField: [ { position: 30 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpMessage', position: 10, criticality: 'StatusCriticality' } ]
+  @UI.textArrangement: #TEXT_ONLY
+  IDocStatus;
+
+  @UI.selectionField: [ { position: 40 } ]
+  @UI.fieldGroup: [ { qualifier: 'GrpMessage', position: 20 } ]
+  IntegrationStatus;
+
+  @UI: { lineItem:       [ { position: 40, label: 'Date de réception' } ],
+         selectionField: [ { position: 50 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpIdoc', position: 50 } ]
+  CreationDate;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpIdoc', position: 60 } ]
+  CreationTime;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpMessage', position: 30 } ]
+  MessageClass;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpMessage', position: 40 } ]
+  MessageNumber;
+
+  @UI: { lineItem: [ { position: 50, label: 'Message d''erreur' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpMessage', position: 50 } ]
+  MessageText;
+}
