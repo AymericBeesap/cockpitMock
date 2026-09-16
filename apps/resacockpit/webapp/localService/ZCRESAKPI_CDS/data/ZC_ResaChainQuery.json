@@ -400,17 +400,17 @@
         "ConversionRate": "100.0"
     },
     {
-        "ID": "1100_002_RESA_PR_20260721",
+        "ID": "1100_002_RESA_PC_20260721",
         "Plant": "1100",
         "PurchasingGroup": "002",
         "OriginType": "RESA",
         "OriginTypeText": "Réservation magasin",
-        "ChainStage": "PR",
-        "ChainStageText": "Demande d'achat en attente",
+        "ChainStage": "PC",
+        "ChainStageText": "Commande petite caisse",
         "PurReqDate": "/Date(1784592000000)/",
         "PurReqItemCount": 1,
         "ConvertedItemCount": 0,
-        "OpenItemCount": 1,
+        "OpenItemCount": 0,
         "ItemAmount": "2208.300",
         "Currency": "EUR",
         "ConversionRate": "0.0"
@@ -496,17 +496,17 @@
         "ConversionRate": "100.0"
     },
     {
-        "ID": "1100_002_RESA_PR_20260802",
+        "ID": "1100_002_RESA_PC_20260802",
         "Plant": "1100",
         "PurchasingGroup": "002",
         "OriginType": "RESA",
         "OriginTypeText": "Réservation magasin",
-        "ChainStage": "PR",
-        "ChainStageText": "Demande d'achat en attente",
+        "ChainStage": "PC",
+        "ChainStageText": "Commande petite caisse",
         "PurReqDate": "/Date(1785628800000)/",
         "PurReqItemCount": 1,
         "ConvertedItemCount": 0,
-        "OpenItemCount": 1,
+        "OpenItemCount": 0,
         "ItemAmount": "2468.100",
         "Currency": "EUR",
         "ConversionRate": "0.0"

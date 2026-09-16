@@ -22,6 +22,8 @@
                 <Property Name="PurchaseOrder" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Commande d'achat"/>
                 <Property Name="PurchaseOrderItem" Type="Edm.String" MaxLength="5" sap:display-format="NonNegative" sap:label="Poste de commande"/>
                 <Property Name="PurchaseOrderItemText" Type="Edm.String" MaxLength="40" sap:label="Désignation poste commande" sap:filterable="false"/>
+                <Property Name="FollowOnDocument" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Document aval"/>
+                <Property Name="FollowOnDocumentType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Type de document aval"/>
                 <Property Name="OriginType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:text="OriginTypeText" sap:label="Origine"/>
                 <Property Name="OriginTypeText" Type="Edm.String" MaxLength="40" sap:label="Libellé origine" sap:filterable="false"/>
                 <Property Name="ChainStage" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:text="ChainStageText" sap:label="Étape"/>

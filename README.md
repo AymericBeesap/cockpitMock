@@ -11,6 +11,36 @@ sur un modèle 100 % ABAP CDS — SAP S/4HANA 2021 FPS02, SAPUI5 1.96.
 | [cds/](cds/) | Vues CDS (`.asddls`) et extensions de métadonnées (`.asddlxs`) à recopier dans Eclipse ADT | A |
 | [apps/resacockpit/](apps/resacockpit/) | Overview Page `zovp.resacockpit`, intention `ResaCockpit-display` | B |
 | [apps/resatracking/](apps/resatracking/) | List Report + page objet `zlr.resatracking`, intention `ResaChain-track` | C |
+| [apps/resaidoc/](apps/resaidoc/) | Monitoring des IDocs `zlr.resaidoc`, intention `ResaIdoc-monitor` | A7.3 |
+| [apps/alt1creation/](apps/alt1creation/) | **Alternative 1** — création d'une DA `zlr.alt1creation`, intention `ResaPurReq-create` | [MO source appro](.claude/Spec-SourceAppro.md) |
+| [apps/alt1source/](apps/alt1source/) | **Alternative 1** — détermination de la source (toutes les DA) `zlr.alt1source`, intention `ResaSource-determineAll` | idem |
+| [apps/alt2creation/](apps/alt2creation/) | **Alternative 2** — commande de réapprovisionnement `zlr.alt2creation`, intention `ResaReplen-order` | idem |
+| [apps/alt2source/](apps/alt2source/) | **Alternative 2** — réservations à approvisionner `zlr.alt2source`, intention `ResaSource-determineResa` | idem |
+| [apps/sourcecommon/](apps/sourcecommon/) | Extension d'interface mutualisée par les 4 applications ci-dessus | idem |
+
+## Maquettes des deux alternatives (remplacement de « commande à passer »)
+
+Le programme « commande à passer » de SAP Retail Store (plus de 600 000 appels, 1,5 M avec les programmes dérivés)
+doit être scindé en deux processus : gestion de la commande de réservation et commande de réapprovisionnement.
+Deux alternatives sont **maquettées à iso-données** pour arbitrage, sur un **socle commun** de détermination de la
+source d'approvisionnement — fournisseur EDI, entrepôt, centre voisin, commande petite caisse — qui concentre la
+complexité. Aucune source n'est proposée automatiquement : le comparatif est restitué par poste, le choix est manuel.
+
+Contexte complet, avis exprimés, modèle de données et questions ouvertes :
+**[.claude/Spec-SourceAppro.md](.claude/Spec-SourceAppro.md)**.
+
+> **Écart assumé** : les quatre applications partagent un service unique, donc un seul jeu d'annotations.
+> Les boutons de création apparaissent aussi dans les écrans de détermination, alors que l'Alternative 1
+> prévoit une tuile de détermination sans création. Dans la cible, une vue de consommation par tuile
+> porterait ses propres annotations.
+
+```sh
+npm run start:alt1           # Alternative 1 - détermination de la source (toutes les DA)
+npm run start:alt1creation   # Alternative 1 - création d'une demande d'achat
+npm run start:alt2           # Alternative 2 - réservations à approvisionner
+npm run start:alt2creation   # Alternative 2 - commande de réapprovisionnement
+npm run mockdata             # régénère les données de démonstration
+```
 
 Chaque application contient :
 
@@ -45,6 +75,8 @@ ouvre l'application seule, sans navigation vers les autres applications.
 | Aucun lien ne fonctionne, `failed to load .../Component.js` en console | Serveur démarré avant l'ajout de la navigation, ou application lancée seule (`start-standalone`) | Arrêter le serveur et relancer `npm run start:launchpad` |
 | Cartes vides ou page du cockpit qui ne finit pas de charger | Serveur démarré avec une ancienne configuration pointant vers des fichiers supprimés | Idem : arrêter et relancer |
 | Port 8080 déjà utilisé | Un autre serveur du projet tourne encore | Arrêter l'autre serveur avant de relancer |
+| Erreur 500 en appelant une action en REST direct (curl, Postman) | Le mock server exige un corps de requête typé | Envoyer un corps JSON `{}` avec `Content-Type: application/json`, en plus des paramètres d'URL. Depuis les écrans (`callFunction`), l'appel fonctionne sans rien faire |
+| Les actions ne reflètent plus les données d'origine | Les actions modifient l'état **en mémoire** du mock server | Redémarrer le serveur : les fichiers de données sont rechargés tels quels |
 
 Pour travailler contre le système : renseigner `backend.url` / `client` dans `ui5.yaml`, puis `npm start` dans le dossier de l'application.
 
@@ -54,7 +86,8 @@ Le mock server ne sait pas agréger une requête analytique V2 : le hook
 dimensions de `$select`, recalcule les formules (taux de conversion, taux d'intégration) et applique `$skip` / `$top`
 après agrégation (en-têtes KPI en `$top=1`). `MOCK_AGG_DEBUG=1` trace les propriétés reçues par le hook.
 
-Valeurs attendues en local : 13 postes en attente (vert), taux de conversion 71 % (critique), 8 IDocs en erreur (critique).
+Valeurs attendues en local : 11 postes en attente (vert), taux de conversion 71 % (critique), 8 IDocs en erreur (critique).
+Deux postes sont soldés par une commande petite caisse (`ZPC`) et ne comptent donc plus parmi les postes en attente.
 
 ## Ordre d'activation des vues CDS
 

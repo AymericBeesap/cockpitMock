@@ -1,0 +1,33 @@
+<!--
+    Extension mutualisée du socle commun : synthèse des sources disponibles pour un poste.
+    Utilisée telle quelle par les deux écrans de détermination (Alternative 1 et Alternative 2)
+    via resourceRoots "zresa.sourcecommon", pour démontrer que le mécanisme est partagé.
+    Aucune source n'est proposée par défaut : la synthèse aide à lire le comparatif.
+-->
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+    <VBox class="sapUiSmallMargin">
+        <MessageStrip
+            type="Warning"
+            showIcon="true"
+            class="sapUiSmallMarginBottom"
+            visible="{= ${SupplierSourceCount} === 0 }"
+            text="Aucune source fournisseur disponible pour ce poste : la commande petite caisse est la seule option d'approvisionnement." />
+        <MessageStrip
+            type="Information"
+            showIcon="true"
+            class="sapUiSmallMarginBottom"
+            visible="{= ${SupplierSourceCount} > 0 &amp;&amp; ${SourceStatus} === 'TODO' }"
+            text="Plusieurs sources sont disponibles : comparer disponibilité, délai et prix dans la section ci-dessous, puis retenir une source." />
+        <l:HorizontalLayout allowWrapping="true">
+            <ObjectStatus class="sapUiMediumMarginEnd" title="Sources disponibles" text="{SourceOptionCount}" />
+            <ObjectStatus class="sapUiMediumMarginEnd" title="Dont fournisseurs" text="{SupplierSourceCount}"
+                state="{= ${SupplierSourceCount} > 0 ? 'Success' : 'Warning' }" />
+            <ObjectStatus class="sapUiMediumMarginEnd" title="Petite caisse"
+                text="{= ${PettyCashEligible} ? 'Possible' : 'Non éligible' }"
+                state="{= ${PettyCashEligible} ? 'Success' : 'None' }" />
+            <ObjectStatus class="sapUiMediumMarginEnd" title="Source retenue"
+                text="{= ${SelectedSourceTypeText} || 'Aucune' }"
+                state="{= ${SourceStatus} === 'TODO' ? 'Warning' : 'Success' }" />
+        </l:HorizontalLayout>
+    </VBox>
+</core:FragmentDefinition>

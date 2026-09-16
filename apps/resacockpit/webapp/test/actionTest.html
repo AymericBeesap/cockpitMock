@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+    Page de diagnostic (dossier test/, exclue du build et du déploiement).
+    Elle appelle un function import du socle « source d'approvisionnement » exactement comme le
+    fait Fiori elements V2 (sap.ui.model.odata.v2.ODataModel.callFunction), afin de vérifier que
+    le mock server accepte l'appel tel que l'envoie l'application.
+    Ouvrir : /test/actionTest.html
+-->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>diagnostic actions</title>
+    <script id="sap-ui-bootstrap"
+        src="../resources/sap-ui-core.js"
+        data-sap-ui-libs="sap.m"
+        data-sap-ui-async="true"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-language="fr">
+    </script>
+    <script>
+        function log(sLine) {
+            var oOut = document.getElementById("result");
+            oOut.textContent = oOut.textContent + sLine + "\n";
+            document.title = "diagnostic: " + sLine;
+        }
+
+        sap.ui.getCore().attachInit(function () {
+            sap.ui.require(["sap/ui/model/odata/v2/ODataModel"], function (ODataModel) {
+                var oModel = new ODataModel("/sap/opu/odata/sap/ZCRESASRC_CDS/", {
+                    defaultCountMode: "Inline"
+                });
+                oModel.metadataLoaded().then(function () {
+                    log("METADATA_OK");
+                    oModel.callFunction("/AssignSource", {
+                        method: "POST",
+                        urlParameters: {
+                            PurchaseRequisition: "0010010015",
+                            PurchaseRequisitionItem: "00020",
+                            SourceOptionId: "0010010015_00020_CASH_PETITECAISSE"
+                        },
+                        success: function (oData) {
+                            log("CALLFUNCTION_OK statut=" + (oData && oData.SourceStatus) + " source=" + (oData && oData.SelectedSourceType));
+                        },
+                        error: function (oError) {
+                            log("CALLFUNCTION_ERROR " + (oError && (oError.statusCode || "")) + " " + (oError && (oError.message || "")));
+                        }
+                    });
+                }).catch(function (e) {
+                    log("METADATA_ERROR " + e);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <pre id="result"></pre>
+</body>
+</html>

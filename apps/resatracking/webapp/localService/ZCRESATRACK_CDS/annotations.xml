@@ -172,6 +172,14 @@
                                 <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="PurchaseOrderItemText"/>
                                 </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="FollowOnDocument"/>
+                                    <PropertyValue Property="Label" String="Document aval"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="FollowOnDocumentType"/>
+                                    <PropertyValue Property="Label" String="Type de document aval"/>
+                                </Record>
                             </Collection>
                         </PropertyValue>
                     </Record>

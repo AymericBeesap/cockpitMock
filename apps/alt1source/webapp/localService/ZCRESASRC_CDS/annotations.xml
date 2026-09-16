@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reproduit l'annotation service ZCRESASRC_CDS_VAN généré par les extensions de métadonnées
+     cds/ZC_ResaPurReqWorklist.asddlxs, cds/ZC_ResaSourceOption.asddlxs et
+     cds/ZC_ResaPettyCashOrder.asddlxs. Toute modification doit être reportée dans le CDS. -->
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/sap/ZCRESASRC_CDS/$metadata">
+        <edmx:Include Namespace="ZCRESASRC_CDS" Alias="SAP"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="ZCRESASRC_CDS_VAN" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+            <!-- ============================ liste de travail ============================ -->
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaPurReqWorklistType">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Poste à approvisionner"/>
+                        <PropertyValue Property="TypeNamePlural" String="Postes à approvisionner"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="PurchaseRequisition"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="PurchaseRequisitionItemText"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>Plant</PropertyPath>
+                        <PropertyPath>OriginType</PropertyPath>
+                        <PropertyPath>SourceStatus</PropertyPath>
+                        <PropertyPath>Material</PropertyPath>
+                        <PropertyPath>Reservation</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Convertir en commande d'achat"/>
+                            <PropertyValue Property="Action" String="ZCRESASRC_CDS.ZCRESASRC_CDS_Entities/ConvertToPurchaseOrder"/>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Commande petite caisse"/>
+                            <PropertyValue Property="Action" String="ZCRESASRC_CDS.ZCRESASRC_CDS_Entities/CreatePettyCashOrder"/>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+                        </Record>
+                        <!-- Créations : actions sans contexte ; Fiori elements génère le formulaire
+                             de saisie des paramètres du function import. Les deux tuiles de création
+                             s'appuient dessus (Alternative 1 : DA seule ; Alternative 2 : DA + CA).
+                             Écart assumé de la maquette : le service étant unique, ces boutons
+                             apparaissent aussi dans les écrans de détermination. Dans la cible, une
+                             vue de consommation par tuile porterait ses propres annotations. -->
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Créer une demande d'achat"/>
+                            <PropertyValue Property="Action" String="ZCRESASRC_CDS.ZCRESASRC_CDS_Entities/CreatePurchaseRequisition"/>
+                            <PropertyValue Property="RequiresContext" Bool="false"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Créer une commande de réapprovisionnement"/>
+                            <PropertyValue Property="Action" String="ZCRESASRC_CDS.ZCRESASRC_CDS_Entities/CreateReplenishmentOrder"/>
+                            <PropertyValue Property="RequiresContext" Bool="false"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PurchaseRequisition"/>
+                            <PropertyValue Property="Label" String="Demande d'achat"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Reservation"/>
+                            <PropertyValue Property="Label" String="Réservation"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="OriginType"/>
+                            <PropertyValue Property="Label" String="Origine"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Plant"/>
+                            <PropertyValue Property="Label" String="Division"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Material"/>
+                            <PropertyValue Property="Label" String="Article"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PurchaseRequisitionItemText"/>
+                            <PropertyValue Property="Label" String="Désignation"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="RequestedQuantity"/>
+                            <PropertyValue Property="Label" String="Quantité"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PurReqDate"/>
+                            <PropertyValue Property="Label" String="Date de besoin"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceOptionCount"/>
+                            <PropertyValue Property="Label" String="Sources"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SupplierSourceCount"/>
+                            <PropertyValue Property="Label" String="Dont fournisseurs"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SelectedSourceType"/>
+                            <PropertyValue Property="Label" String="Source retenue"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceStatus"/>
+                            <PropertyValue Property="Label" String="Statut"/>
+                            <PropertyValue Property="Criticality" Path="SourceCriticality"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="FollowOnDocument"/>
+                            <PropertyValue Property="Label" String="Document aval"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="ID" String="Besoin"/>
+                            <PropertyValue Property="Label" String="Besoin"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GrpBesoin"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="ID" String="Sources"/>
+                            <PropertyValue Property="Label" String="Sources d'approvisionnement disponibles"/>
+                            <PropertyValue Property="Target" AnnotationPath="to_SourceOption/@UI.LineItem"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="ID" String="Resultat"/>
+                            <PropertyValue Property="Label" String="Approvisionnement retenu"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GrpResultat"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="GrpBesoin">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="PurchaseRequisition"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="PurchaseRequisitionItem"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="Reservation"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="OriginType"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="Plant"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="Material"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="PurchaseRequisitionItemText"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="RequestedQuantity"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="PurReqDate"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="ItemAmount"/></Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="GrpResultat">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="SourceOptionCount"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="SupplierSourceCount"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="SelectedSourceType"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="SelectedSourceName"/></Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="SourceStatus"/>
+                                    <PropertyValue Property="Criticality" Path="SourceCriticality"/>
+                                </Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="FollowOnDocument"/></Record>
+                                <Record Type="UI.DataField"><PropertyValue Property="Value" Path="FollowOnDocumentType"/></Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Convertir en commande d'achat"/>
+                            <PropertyValue Property="Action" String="ZCRESASRC_CDS.ZCRESASRC_CDS_Entities/ConvertToPurchaseOrder"/>
+                            <PropertyValue Property="Determining" Bool="true"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Commande petite caisse"/>
+                            <PropertyValue Property="Action" String="ZCRESASRC_CDS.ZCRESASRC_CDS_Entities/CreatePettyCashOrder"/>
+                            <PropertyValue Property="Determining" Bool="true"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForIntentBasedNavigation">
+                            <PropertyValue Property="SemanticObject" String="ResaCockpit"/>
+                            <PropertyValue Property="Action" String="display"/>
+                            <PropertyValue Property="Label" String="Cockpit"/>
+                            <PropertyValue Property="RequiresContext" Bool="false"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="PurReqDate"/>
+                                    <PropertyValue Property="Descending" Bool="false"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <!-- Alternative 1 : toutes les DA restant à approvisionner -->
+                <Annotation Term="UI.SelectionVariant" Qualifier="ToutesDA">
+                    <Record Type="UI.SelectionVariantType">
+                        <PropertyValue Property="Text" String="Toutes les demandes d'achat à approvisionner"/>
+                        <PropertyValue Property="SelectOptions">
+                            <Collection>
+                                <Record Type="UI.SelectOptionType">
+                                    <PropertyValue Property="PropertyName" PropertyPath="SourceStatus"/>
+                                    <PropertyValue Property="Ranges">
+                                        <Collection>
+                                            <Record Type="UI.SelectionRangeType">
+                                                <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/E"/>
+                                                <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                                                <PropertyValue Property="Low" String="CONV"/>
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <!-- Écrans de création : besoins internes au centre (réapprovisionnement manuel) -->
+                <Annotation Term="UI.SelectionVariant" Qualifier="ReapproManuel">
+                    <Record Type="UI.SelectionVariantType">
+                        <PropertyValue Property="Text" String="Réapprovisionnement manuel du centre"/>
+                        <PropertyValue Property="SelectOptions">
+                            <Collection>
+                                <Record Type="UI.SelectOptionType">
+                                    <PropertyValue Property="PropertyName" PropertyPath="OriginType"/>
+                                    <PropertyValue Property="Ranges">
+                                        <Collection>
+                                            <Record Type="UI.SelectionRangeType">
+                                                <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                                                <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                                                <PropertyValue Property="Low" String="AUTR"/>
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <!-- Alternative 2 : uniquement les réservations -->
+                <Annotation Term="UI.SelectionVariant" Qualifier="Reservations">
+                    <Record Type="UI.SelectionVariantType">
+                        <PropertyValue Property="Text" String="Réservations à approvisionner"/>
+                        <PropertyValue Property="SelectOptions">
+                            <Collection>
+                                <Record Type="UI.SelectOptionType">
+                                    <PropertyValue Property="PropertyName" PropertyPath="OriginType"/>
+                                    <PropertyValue Property="Ranges">
+                                        <Collection>
+                                            <Record Type="UI.SelectionRangeType">
+                                                <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                                                <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                                                <PropertyValue Property="Low" String="RESA"/>
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                                <Record Type="UI.SelectOptionType">
+                                    <PropertyValue Property="PropertyName" PropertyPath="SourceStatus"/>
+                                    <PropertyValue Property="Ranges">
+                                        <Collection>
+                                            <Record Type="UI.SelectionRangeType">
+                                                <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/E"/>
+                                                <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                                                <PropertyValue Property="Low" String="CONV"/>
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaPurReqWorklistType/SourceCriticality">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaPurReqWorklistType/OriginType">
+                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaPurReqWorklistType/SourceStatus">
+                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaPurReqWorklistType/SelectedSourceType">
+                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+            </Annotations>
+
+            <!-- ============================ options de source ============================ -->
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaSourceOptionType">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Source d'approvisionnement"/>
+                        <PropertyValue Property="TypeNamePlural" String="Sources d'approvisionnement"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="SourceName"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="SourceTypeText"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <!-- Aucun tri par prix ni par délai : pas de proposition automatique -->
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Retenir cette source"/>
+                            <PropertyValue Property="Action" String="ZCRESASRC_CDS.ZCRESASRC_CDS_Entities/AssignSource"/>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceType"/>
+                            <PropertyValue Property="Label" String="Type de source"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceName"/>
+                            <PropertyValue Property="Label" String="Source"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Availability"/>
+                            <PropertyValue Property="Label" String="Disponibilité"/>
+                            <PropertyValue Property="Criticality" Path="SourceCriticality"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="AvailableQuantity"/>
+                            <PropertyValue Property="Label" String="Quantité disponible"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="LeadTimeDays"/>
+                            <PropertyValue Property="Label" String="Délai (jours)"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="NetPrice"/>
+                            <PropertyValue Property="Label" String="Prix"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceId"/>
+                            <PropertyValue Property="Label" String="Identifiant"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaSourceOptionType/SourceCriticality">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaSourceOptionType/SourceOptionId">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaSourceOptionType/SourceType">
+                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaSourceOptionType/Availability">
+                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+            </Annotations>
+
+            <!-- ============================ commandes petite caisse ============================ -->
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaPettyCashOrderType">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Commande petite caisse"/>
+                        <PropertyValue Property="TypeNamePlural" String="Commandes petite caisse"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="PettyCashOrder"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="ItemText"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PettyCashOrder"/>
+                            <PropertyValue Property="Label" String="N° commande"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Reservation"/>
+                            <PropertyValue Property="Label" String="Réservation"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Plant"/>
+                            <PropertyValue Property="Label" String="Division"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Material"/>
+                            <PropertyValue Property="Label" String="Article"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Amount"/>
+                            <PropertyValue Property="Label" String="Montant"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="LocalSupplierName"/>
+                            <PropertyValue Property="Label" String="Fournisseur local"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PettyCashStatus"/>
+                            <PropertyValue Property="Label" String="Statut"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZCRESASRC_CDS.ZC_ResaPettyCashOrderType/PettyCashStatus">
+                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

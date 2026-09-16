@@ -1,0 +1,38 @@
+[
+    {
+        "PettyCashOrder": "9100000125",
+        "Reservation": "RES0260026",
+        "PurchaseRequisition": "0010010013",
+        "PurchaseRequisitionItem": "00020",
+        "Plant": "1100",
+        "Material": "MAT-20310",
+        "ItemText": "Présentoir caisse",
+        "Quantity": "17.000",
+        "BaseUnit": "PC",
+        "Amount": "2208.300",
+        "Currency": "EUR",
+        "LocalSupplierName": "QUINCAILLERIE DU CENTRE",
+        "CreationDate": "/Date(1784592000000)/",
+        "CreatedByUser": "MAGASIN01",
+        "PettyCashStatus": "JU",
+        "PettyCashStatusText": "Justificatif reçu"
+    },
+    {
+        "PettyCashOrder": "9100000131",
+        "Reservation": "RES0260032",
+        "PurchaseRequisition": "0010010016",
+        "PurchaseRequisitionItem": "00020",
+        "Plant": "1100",
+        "Material": "MAT-20310",
+        "ItemText": "Présentoir caisse",
+        "Quantity": "19.000",
+        "BaseUnit": "PC",
+        "Amount": "2468.100",
+        "Currency": "EUR",
+        "LocalSupplierName": "BRICO EXPRESS",
+        "CreationDate": "/Date(1785628800000)/",
+        "CreatedByUser": "MAGASIN01",
+        "PettyCashStatus": "CR",
+        "PettyCashStatusText": "Créée"
+    }
+]

@@ -24,6 +24,10 @@ define view ZC_ResaChainTracking
       PurchaseOrderItem,
       PurchaseOrderItemText,
 
+      -- aval effectif : commande d'achat (ZDI5) ou commande petite caisse (ZPC)
+      FollowOnDocument,
+      FollowOnDocumentType,
+
       @ObjectModel.text.element: [ 'OriginTypeText' ]
       OriginType,
       OriginTypeText,

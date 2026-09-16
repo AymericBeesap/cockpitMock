@@ -1,0 +1,63 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: { typeName:       'Commande petite caisse',
+                  typeNamePlural: 'Commandes petite caisse',
+                  title:       { type: #STANDARD, value: 'PettyCashOrder' },
+                  description: { value: 'ItemText' } }
+
+@UI.facet: [ { id: 'Achat', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpAchat',
+               label: 'Achat local', position: 10 },
+             { id: 'Origine', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpOrigine',
+               label: 'Besoin d''origine', position: 20 } ]
+
+annotate view ZC_ResaPettyCashOrder with
+{
+  @UI: { lineItem:       [ { position: 10, label: 'N° commande', importance: #HIGH } ],
+         selectionField: [ { position: 10 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpAchat', position: 10 } ]
+  PettyCashOrder;
+
+  @UI: { lineItem:       [ { position: 20, label: 'Division' } ],
+         selectionField: [ { position: 20 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpAchat', position: 20 } ]
+  Plant;
+
+  @UI: { lineItem: [ { position: 30, label: 'Article', importance: #HIGH } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpAchat', position: 30 } ]
+  Material;
+
+  @UI: { lineItem: [ { position: 40, label: 'Désignation' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpAchat', position: 40 } ]
+  ItemText;
+
+  @UI: { lineItem: [ { position: 50, label: 'Montant', importance: #HIGH } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpAchat', position: 50 } ]
+  Amount;
+
+  @UI: { lineItem: [ { position: 60, label: 'Fournisseur local' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpAchat', position: 60 } ]
+  LocalSupplierName;
+
+  @UI: { lineItem:       [ { position: 70, label: 'Réservation', importance: #HIGH } ],
+         selectionField: [ { position: 30 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 10 } ]
+  Reservation;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 20 } ]
+  PurchaseRequisition;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 30 } ]
+  PurchaseRequisitionItem;
+
+  @UI: { lineItem: [ { position: 80, label: 'Date de création' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpAchat', position: 70 } ]
+  CreationDate;
+
+  @UI: { lineItem:       [ { position: 90, label: 'Statut' } ],
+         selectionField: [ { position: 40 } ] }
+  @UI.textArrangement: #TEXT_ONLY
+  @UI.fieldGroup: [ { qualifier: 'GrpAchat', position: 80 } ]
+  PettyCashStatus;
+}

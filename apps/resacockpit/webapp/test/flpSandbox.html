@@ -9,6 +9,7 @@
     <script type="text/javascript">
         // Launchpad local : chaque entrée d'« applications » joue le rôle d'un target mapping.
         // Dans le Launchpad réel, ces mappings sont créés dans le catalogue Z du projet (§E2).
+        // Les groupes de tuiles matérialisent les deux alternatives soumises à arbitrage.
         window["sap-ushell-config"] = {
             defaultRenderer: "fiori2",
             bootstrapPlugins: {
@@ -25,6 +26,127 @@
                         config: {
                             enableSearch: false,
                             rootIntent: "Shell-home"
+                        }
+                    }
+                }
+            },
+            services: {
+                LaunchPage: {
+                    adapter: {
+                        config: {
+                            groups: [
+                                {
+                                    id: "groupSuivi",
+                                    title: "Suivi des réservations",
+                                    isPreset: true,
+                                    isVisible: true,
+                                    isGroupLocked: false,
+                                    tiles: [
+                                        {
+                                            id: "tileCockpit",
+                                            title: "Cockpit réservations magasin",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Cockpit réservations magasin",
+                                                subtitle: "Réservation, DA, commande",
+                                                icon: "sap-icon://business-objects-experience",
+                                                targetURL: "#ResaCockpit-display"
+                                            }
+                                        },
+                                        {
+                                            id: "tileTracking",
+                                            title: "Suivi des réservations",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Suivi des réservations",
+                                                subtitle: "Chaîne réservation - DA - commande",
+                                                icon: "sap-icon://tree",
+                                                targetURL: "#ResaChain-track"
+                                            }
+                                        },
+                                        {
+                                            id: "tileIdoc",
+                                            title: "Monitoring des IDocs",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Monitoring des IDocs",
+                                                subtitle: "Réservations en erreur",
+                                                icon: "sap-icon://message-error",
+                                                targetURL: "#ResaIdoc-monitor"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "groupAlt1",
+                                    title: "Alternative 1 - deux tuiles rationalisées",
+                                    isPreset: true,
+                                    isVisible: true,
+                                    isGroupLocked: false,
+                                    tiles: [
+                                        {
+                                            id: "tileAlt1Creation",
+                                            title: "A1 - Créer une demande d'achat",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "A1 - Créer une demande d'achat",
+                                                subtitle: "Besoin interne au centre",
+                                                icon: "sap-icon://add-document",
+                                                targetURL: "#ResaPurReq-create"
+                                            }
+                                        },
+                                        {
+                                            id: "tileAlt1Source",
+                                            title: "A1 - Détermination de la source",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "A1 - Détermination de la source",
+                                                subtitle: "Toutes les demandes d'achat",
+                                                icon: "sap-icon://source-code",
+                                                targetURL: "#ResaSource-determineAll"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "groupAlt2",
+                                    title: "Alternative 2 - split réappro / réservation",
+                                    isPreset: true,
+                                    isVisible: true,
+                                    isGroupLocked: false,
+                                    tiles: [
+                                        {
+                                            id: "tileAlt2Creation",
+                                            title: "A2 - Commande de réapprovisionnement",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "A2 - Commande de réapprovisionnement",
+                                                subtitle: "Source choisie à la création",
+                                                icon: "sap-icon://cart-full",
+                                                targetURL: "#ResaReplen-order"
+                                            }
+                                        },
+                                        {
+                                            id: "tileAlt2Source",
+                                            title: "A2 - Réservations à approvisionner",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "A2 - Réservations à approvisionner",
+                                                subtitle: "Dont commande petite caisse",
+                                                icon: "sap-icon://retail-store",
+                                                targetURL: "#ResaSource-determineResa"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     }
                 }
@@ -51,6 +173,38 @@
                     additionalInformation: "SAPUI5.Component=zlr.resaidoc",
                     applicationType: "URL",
                     url: "/apps/resaidoc"
+                },
+
+                // ---- Alternative 1 : rationalisation autour de deux tuiles
+                "ResaPurReq-create": {
+                    title: "A1 - Créer une demande d'achat",
+                    description: "Besoin interne au centre",
+                    additionalInformation: "SAPUI5.Component=zlr.alt1creation",
+                    applicationType: "URL",
+                    url: "/apps/alt1creation"
+                },
+                "ResaSource-determineAll": {
+                    title: "A1 - Détermination de la source d'approvisionnement",
+                    description: "Toutes les demandes d'achat",
+                    additionalInformation: "SAPUI5.Component=zlr.alt1source",
+                    applicationType: "URL",
+                    url: "/apps/alt1source"
+                },
+
+                // ---- Alternative 2 : split conforme à l'attente métier et archi
+                "ResaReplen-order": {
+                    title: "A2 - Commande de réapprovisionnement",
+                    description: "Source choisie à la création",
+                    additionalInformation: "SAPUI5.Component=zlr.alt2creation",
+                    applicationType: "URL",
+                    url: "/apps/alt2creation"
+                },
+                "ResaSource-determineResa": {
+                    title: "A2 - Réservations à approvisionner",
+                    description: "Dont commande petite caisse",
+                    additionalInformation: "SAPUI5.Component=zlr.alt2source",
+                    applicationType: "URL",
+                    url: "/apps/alt2source"
                 },
 
                 // ---- TODO NAVIGATION : cibles hors projet, à créer dans le Launchpad réel.

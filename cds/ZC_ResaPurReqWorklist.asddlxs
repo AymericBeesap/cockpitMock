@@ -1,0 +1,113 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: { typeName:       'Poste à approvisionner',
+                  typeNamePlural: 'Postes à approvisionner',
+                  title:       { type: #STANDARD, value: 'PurchaseRequisition' },
+                  description: { value: 'PurchaseRequisitionItemText' } }
+
+-- Alternative 1 : toutes les DA restant à approvisionner (réappro manuel et réservation)
+@UI.selectionVariant: [ { qualifier: 'ToutesDA',
+                          text: 'Toutes les demandes d''achat à approvisionner',
+                          filter: 'SourceStatus NE ''CONV''' },
+                        -- Alternative 2 : uniquement les réservations
+                        { qualifier: 'Reservations',
+                          text: 'Réservations à approvisionner',
+                          filter: 'OriginType EQ ''RESA'' AND SourceStatus NE ''CONV''' } ]
+
+@UI.presentationVariant: [ { sortOrder: [ { by: 'PurReqDate', direction: #ASC } ],
+                             visualizations: [ { type: #AS_LINEITEM } ] } ]
+
+@UI.facet: [ { id: 'Besoin', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpBesoin',
+               label: 'Besoin', position: 10 },
+             { id: 'Sources', purpose: #STANDARD,
+               type: #LINEITEM_REFERENCE, targetElement: '_SourceOption',
+               label: 'Sources d''approvisionnement disponibles', position: 20 },
+             { id: 'Resultat', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpResultat',
+               label: 'Approvisionnement retenu', position: 30 } ]
+
+annotate view ZC_ResaPurReqWorklist with
+{
+  @UI.hidden: true
+  SourceCriticality;
+
+  @UI: { lineItem:       [ { position: 10, label: 'Demande d''achat', importance: #HIGH },
+                           -- actions de la barre d'outils (§socle commun)
+                           { type: #FOR_ACTION, dataAction: 'ConvertToPurchaseOrder',
+                             label: 'Convertir en commande d''achat' },
+                           { type: #FOR_ACTION, dataAction: 'CreatePettyCashOrder',
+                             label: 'Commande petite caisse' } ],
+         selectionField: [ { position: 10 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 10 } ]
+  PurchaseRequisition;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 20 } ]
+  PurchaseRequisitionItem;
+
+  @UI: { lineItem:       [ { position: 20, label: 'Réservation' } ],
+         selectionField: [ { position: 20 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 30 } ]
+  Reservation;
+
+  @UI: { lineItem:       [ { position: 30, label: 'Origine' } ],
+         selectionField: [ { position: 30 } ] }
+  @UI.textArrangement: #TEXT_ONLY
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 40 } ]
+  OriginType;
+
+  @UI: { lineItem:       [ { position: 40, label: 'Division', importance: #HIGH } ],
+         selectionField: [ { position: 40 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 50 } ]
+  Plant;
+
+  @UI: { lineItem: [ { position: 50, label: 'Article', importance: #HIGH } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 60 } ]
+  Material;
+
+  @UI: { lineItem: [ { position: 60, label: 'Désignation' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 70 } ]
+  PurchaseRequisitionItemText;
+
+  @UI: { lineItem: [ { position: 70, label: 'Quantité' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 80 } ]
+  RequestedQuantity;
+
+  @UI: { lineItem: [ { position: 80, label: 'Date de besoin' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 90 } ]
+  PurReqDate;
+
+  @UI: { lineItem: [ { position: 90, label: 'Montant' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 100 } ]
+  ItemAmount;
+
+  @UI: { lineItem: [ { position: 100, label: 'Sources', importance: #HIGH } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpResultat', position: 10 } ]
+  SourceOptionCount;
+
+  @UI: { lineItem: [ { position: 110, label: 'Dont fournisseurs' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpResultat', position: 20 } ]
+  SupplierSourceCount;
+
+  @UI: { lineItem:       [ { position: 120, label: 'Source retenue' } ] }
+  @UI.textArrangement: #TEXT_ONLY
+  @UI.fieldGroup: [ { qualifier: 'GrpResultat', position: 30 } ]
+  SelectedSourceType;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpResultat', position: 40 } ]
+  SelectedSourceId;
+
+  @UI: { lineItem:       [ { position: 130, label: 'Statut',
+                             criticality: 'SourceCriticality', importance: #HIGH } ],
+         selectionField: [ { position: 50 } ] }
+  @UI.textArrangement: #TEXT_ONLY
+  @UI.fieldGroup: [ { qualifier: 'GrpResultat', position: 50 } ]
+  SourceStatus;
+
+  @UI: { lineItem: [ { position: 140, label: 'Document aval' } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpResultat', position: 60 } ]
+  FollowOnDocument;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpResultat', position: 70 } ]
+  FollowOnDocumentType;
+}

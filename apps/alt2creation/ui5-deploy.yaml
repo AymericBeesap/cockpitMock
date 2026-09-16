@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "4.0"
+metadata:
+  name: zlr.alt2creation
+type: application
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        ignoreCertError: false
+        target:
+          url: https://<hote-s4hana>:<port> # TODO
+          client: "100" # TODO
+        app:
+          name: ZLR_A2CREATE # nom de l'application BSP (15 caractères max.)
+          description: Commande de réapprovisionnement
+          package: Z_RESA_COCKPIT # TODO
+          transport: <ordre-de-transport> # TODO
+        exclude:
+          - /test/

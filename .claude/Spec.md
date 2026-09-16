@@ -1,5 +1,13 @@
 # Mode opératoire — Cockpit de suivi des réservations magasin
 
+> **➡️ Solution cible du traitement manuel des réservations**
+> Ce document décrit le **suivi** des réservations (cockpit et list report). Le remplacement du programme
+> « commande à passer » de SRS — c'est-à-dire la transformation manuelle DA ⇒ CA, repère ⑴ du flux — fait l'objet
+> d'un mode opératoire distinct : **[MO Socle source d'approvisionnement](Spec-SourceAppro.md)**.
+> Il couvre le contexte (600 000 appels, 1,5 M avec les programmes dérivés), le scénario commande client et les
+> avis exprimés, les deux alternatives maquettées et le socle commun de détermination de la source
+> d'approvisionnement (fournisseur EDI, entrepôt, centre voisin, commande petite caisse).
+
 ## Réservation · Demande d'achat · Commande d'achat
 
 **Overview Page + List Report — SAP Fiori elements**

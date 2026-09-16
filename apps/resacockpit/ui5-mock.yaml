@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
 #
-# Launchpad local : le cockpit, le suivi détaillé et le monitoring des IDocs sont servis
-# ensemble pour tester les navigations entre applications (test/flpSandbox.html).
+# Launchpad local unique : cockpit réservations, suivi de la chaîne, monitoring IDoc
+# et les quatre applications des deux alternatives du socle « source d'approvisionnement ».
 
 specVersion: "4.0"
 metadata:
@@ -34,6 +34,16 @@ server:
             src: ../resatracking/webapp
           - path: /apps/resaidoc
             src: ../resaidoc/webapp
+          - path: /apps/alt1source
+            src: ../alt1source/webapp
+          - path: /apps/alt1creation
+            src: ../alt1creation/webapp
+          - path: /apps/alt2source
+            src: ../alt2source/webapp
+          - path: /apps/alt2creation
+            src: ../alt2creation/webapp
+          - path: /apps/sourcecommon
+            src: ../sourcecommon
     - name: sap-fe-mockserver
       beforeMiddleware: csp
       configuration:
@@ -55,6 +65,11 @@ server:
             metadataPath: ../resaidoc/webapp/localService/ZCRESAIDTRACK_CDS/metadata.xml
             mockdataPath: ../resaidoc/webapp/localService/ZCRESAIDTRACK_CDS/data
             generateMockData: false
+          # socle commun de détermination de la source d'approvisionnement
+          - urlPath: /sap/opu/odata/sap/ZCRESASRC_CDS
+            metadataPath: ../alt1source/webapp/localService/ZCRESASRC_CDS/metadata.xml
+            mockdataPath: ../alt1source/webapp/localService/ZCRESASRC_CDS/data
+            generateMockData: false
         annotations:
           - localPath: ./webapp/localService/ZCRESAKPI_CDS/annotations.xml
             urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESAKPI_CDS_VAN',Version='0001')/$value/
@@ -64,3 +79,5 @@ server:
             urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESATRACK_CDS_VAN',Version='0001')/$value/
           - localPath: ../resaidoc/webapp/localService/ZCRESAIDTRACK_CDS/annotations.xml
             urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESAIDTRACK_CDS_VAN',Version='0001')/$value/
+          - localPath: ../alt1source/webapp/localService/ZCRESASRC_CDS/annotations.xml
+            urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESASRC_CDS_VAN',Version='0001')/$value/

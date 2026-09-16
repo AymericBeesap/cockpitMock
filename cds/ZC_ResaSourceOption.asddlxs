@@ -1,0 +1,50 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: { typeName:       'Source d''approvisionnement',
+                  typeNamePlural: 'Sources d''approvisionnement',
+                  title:       { type: #STANDARD, value: 'SourceName' },
+                  description: { value: 'SourceTypeText' } }
+
+-- Aucun tri par disponibilité ni par prix : les options sont restituées par famille de
+-- source, le choix reste manuel (décision de conception, cf. mode opératoire cible).
+@UI.presentationVariant: [ { sortOrder: [ { by: 'SourceType', direction: #ASC },
+                                          { by: 'SourceName', direction: #ASC } ],
+                             visualizations: [ { type: #AS_LINEITEM } ] } ]
+
+annotate view ZC_ResaSourceOption with
+{
+  @UI.hidden: true
+  SourceOptionId;
+
+  @UI.hidden: true
+  SourceCriticality;
+
+  @UI.hidden: true
+  IsSelected;
+
+  @UI: { lineItem: [ { position: 10, label: 'Type de source', importance: #HIGH },
+                     { type: #FOR_ACTION, dataAction: 'AssignSource',
+                       label: 'Retenir cette source' } ] }
+  @UI.textArrangement: #TEXT_ONLY
+  SourceType;
+
+  @UI: { lineItem: [ { position: 20, label: 'Source', importance: #HIGH } ] }
+  SourceName;
+
+  @UI: { lineItem: [ { position: 30, label: 'Disponibilité',
+                       criticality: 'SourceCriticality', importance: #HIGH } ] }
+  @UI.textArrangement: #TEXT_ONLY
+  Availability;
+
+  @UI: { lineItem: [ { position: 40, label: 'Quantité disponible' } ] }
+  AvailableQuantity;
+
+  @UI: { lineItem: [ { position: 50, label: 'Délai (jours)' } ] }
+  LeadTimeDays;
+
+  @UI: { lineItem: [ { position: 60, label: 'Prix' } ] }
+  NetPrice;
+
+  @UI: { lineItem: [ { position: 70, label: 'Identifiant' } ] }
+  SourceId;
+}

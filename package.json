@@ -2,7 +2,7 @@
   "name": "resa-cockpit",
   "version": "1.0.0",
   "private": true,
-  "description": "Cockpit de suivi des réservations magasin - Overview Page + List Reports (SAP S/4HANA 2021 FPS02)",
+  "description": "Cockpit réservations magasin et maquettes du socle « source d'approvisionnement » (SAP S/4HANA 2021 FPS02)",
   "workspaces": [
     "apps/*"
   ],
@@ -11,7 +11,11 @@
     "start:cockpit": "npm run start-mock --workspace zovp.resacockpit",
     "start:tracking": "npm run start-mock --workspace zlr.resatracking",
     "start:idoc": "npm run start-mock --workspace zlr.resaidoc",
+    "start:alt1": "npm run start-mock --workspace zlr.alt1source",
+    "start:alt1creation": "npm run start-mock --workspace zlr.alt1creation",
+    "start:alt2": "npm run start-mock --workspace zlr.alt2source",
+    "start:alt2creation": "npm run start-mock --workspace zlr.alt2creation",
     "mockdata": "node tools/generate-mockdata.js",
-    "build": "npm run build --workspaces"
+    "build": "npm run build --workspaces --if-present"
   }
 }
