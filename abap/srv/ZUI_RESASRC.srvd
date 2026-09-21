@@ -1,0 +1,13 @@
+@EndUserText.label: 'Détermination de la source d''approvisionnement'
+
+// Service de l'application zlr.srcappro. Un seul service, deux entités :
+//   - PurReqItem   : la liste de travail et son action ;
+//   - SourceOption : le contenu de la pop-up, produit à l'exécution par ZCL_RESA_SRC_QUERY.
+//
+// SourceOption est exposée parce qu'une aide à la saisie doit être atteignable par le service
+// qui l'utilise. Elle est en lecture seule et n'a pas de sens hors du contexte d'un poste de DA.
+
+define service ZUI_RESASRC {
+  expose ZC_ResaPurReqSource as PurReqItem;
+  expose ZI_ResaSourceOption as SourceOption;
+}

@@ -5,7 +5,11 @@
 @Analytics.dataCategory: #CUBE
 
 -- ⚠️ Vérifier dans ADT les noms réels des champs de I_PurchaseRequisitionItem :
---    ZZReservation, SalesOrder / SalesOrderItem, PurchaseOrder / PurchaseOrderItem.
+--    ZZReservation, SalesOrder / SalesOrderItem, PurchaseOrder / PurchaseOrderItem,
+--    ainsi que PurchasingDocumentType sur I_PurchaseOrder.
+--
+-- La commande petite caisse a disparu du périmètre (cf. Spec-SourceAppro-RAP.md, annexe B) :
+-- la chaîne ne connaît plus que deux étapes, DA en attente et commande d'achat créée.
 define view ZI_ResaChainCube
   as select from I_PurchaseRequisitionItem as PurReqItem
 
@@ -17,10 +21,9 @@ define view ZI_ResaChainCube
       on  PurReqItem.PurchaseOrder     = PoItem.PurchaseOrder
       and PurReqItem.PurchaseOrderItem = PoItem.PurchaseOrderItem
 
-    -- aval alternatif : commande petite caisse rattachée au poste (socle source d'appro)
-    left outer join ztresa_pcorder      as PettyCash
-      on  PettyCash.banfn = PurReqItem.PurchaseRequisition
-      and PettyCash.bnfpo = PurReqItem.PurchaseRequisitionItem
+    -- en-tête de la commande d'achat : type de document réel, plutôt que 'ZDI5' en dur
+    left outer join I_PurchaseOrder      as PoHeader
+      on  PurReqItem.PurchaseOrder = PoHeader.PurchaseOrder
 {
   key PurReqItem.PurchaseRequisition,
   key PurReqItem.PurchaseRequisitionItem,
@@ -56,26 +59,19 @@ define view ZI_ResaChainCube
                  else                                     'Autre'
             end as abap.char(40) )               as OriginTypeText,
 
-      -- document aval : commande d'achat ou commande petite caisse
-      cast( case when PurReqItem.PurchaseOrder <> '' then PurReqItem.PurchaseOrder
-                 when PettyCash.pcnum          <> '' then PettyCash.pcnum
-                 else                                     ''
-            end as abap.char(10) )               as FollowOnDocument,
+      -- document aval : la commande d'achat
+      cast( PurReqItem.PurchaseOrder as abap.char(10) ) as FollowOnDocument,
 
-      cast( case when PurReqItem.PurchaseOrder <> '' then 'ZDI5'
-                 when PettyCash.pcnum          <> '' then 'ZPC'
-                 else                                     ''
-            end as abap.char(4) )                as FollowOnDocumentType,
+      -- type de document réel de la commande, relevé sur son en-tête
+      cast( PoHeader.PurchasingDocumentType as abap.char(4) ) as FollowOnDocumentType,
 
       -- étape atteinte dans la chaîne
       case when PurReqItem.PurchaseOrder <> '' then 'PO'
-           when PettyCash.pcnum          <> '' then 'PC'
            else                                     'PR'
       end                                        as ChainStage,
 
       -- libellé de l'étape (ajout par rapport au MO)
       cast( case when PurReqItem.PurchaseOrder <> '' then 'Commande d''achat créée'
-                 when PettyCash.pcnum          <> '' then 'Commande petite caisse'
                  else                                     'Demande d''achat en attente'
             end as abap.char(40) )               as ChainStageText,
 
@@ -85,13 +81,10 @@ define view ZI_ResaChainCube
       case when PurReqItem.PurchaseOrder <> ''
            then 1 else 0 end                     as ConvertedItemCount,
 
-      -- un poste soldé en petite caisse n'est plus en attente d'approvisionnement
       case when PurReqItem.PurchaseOrder =  ''
-            and PettyCash.pcnum          =  ''
            then 1 else 0 end                     as OpenItemCount,
 
       case when PurReqItem.PurchaseOrder <> ''
-            or PettyCash.pcnum           <> ''
            then 3 else 2 end                     as ChainCriticality,
 
       @Semantics.quantity.unitOfMeasure: 'BaseUnit'

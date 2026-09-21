@@ -1,0 +1,12 @@
+@EndUserText.label: 'Détermination de la source - contrôle d''accès'
+@MappingRole: true
+
+-- Autorisation par division, sur l'objet standard des demandes d'achat : aucun objet
+-- d'autorisation Z n'est créé pour cette application. L'affichage est conditionné par
+-- l'activité 03, l'affectation d'une source par l'activité 02 (contrôle d'instance dans
+-- ZBP_R_RESAPURREQSOURCE~get_instance_authorizations).
+
+define role ZR_RESAPURREQSOURCE {
+  grant select on ZR_ResaPurReqSource
+    where ( Plant ) = aspect pfcg_auth( M_BANF_WRK, WERKS, ACTVT = '03' );
+}

@@ -1,0 +1,11 @@
+// Comportement exposé par le service ZUI_RESASRC.
+// Seule l'action est exposée : ni create, ni update, ni delete. Une demande d'achat ne se crée
+// pas ici — c'est le rôle de la tuile standard.
+
+projection;
+strict;
+
+define behavior for ZC_ResaPurReqSource alias PurReqItem
+{
+  use action SelectSource;
+}

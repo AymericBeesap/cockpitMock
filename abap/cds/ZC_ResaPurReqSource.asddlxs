@@ -1,0 +1,112 @@
+@Metadata.layer: #CORE
+
+-- Annotations de l'application zlr.srcappro (List Report Fiori elements V4).
+-- Une seule extension de métadonnées par couche et par vue.
+
+@UI.headerInfo: { typeName:       'Poste sans source',
+                  typeNamePlural: 'Postes de DA sans source d''approvisionnement',
+                  title:       { type: #STANDARD, value: 'PurchaseRequisition' },
+                  description: { value: 'PurchaseRequisitionItemText' } }
+
+-- Les postes les plus anciens d'abord : ce sont les besoins les plus en retard.
+@UI.presentationVariant: [ { sortOrder:      [ { by: 'PurReqDate', direction: #ASC } ],
+                             visualizations: [ { type: #AS_LINEITEM } ] } ]
+
+@UI.facet: [ { id: 'Besoin', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpBesoin',
+               label: 'Besoin', position: 10 },
+             { id: 'Choix', purpose: #STANDARD,
+               type: #FIELDGROUP_REFERENCE, targetQualifier: 'GrpChoix',
+               label: 'Source retenue', position: 20 } ]
+
+annotate view ZC_ResaPurReqSource with
+{
+  -- Bouton « Retenir une source » : barre d'outils de la liste (sélection d'une ligne) et
+  -- pied de page de la page objet. C'est ce bouton qui ouvre la boîte de dialogue de l'action,
+  -- dont le champ « Source retenue » ouvre à son tour la pop-up des sources disponibles
+  -- (cf. ZD_ResaSourceSelParam).
+  @UI: { lineItem:       [ { position: 10, importance: #HIGH },
+                           { type: #FOR_ACTION, dataAction: 'SelectSource',
+                             label: 'Retenir une source' } ],
+         identification: [ { position: 10 },
+                           { type: #FOR_ACTION, dataAction: 'SelectSource',
+                             label: 'Retenir une source' } ],
+         selectionField: [ { position: 10 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 10 } ]
+  PurchaseRequisition;
+
+  @UI: { lineItem: [ { position: 20, importance: #HIGH } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 20 } ]
+  PurchaseRequisitionItem;
+
+  @UI: { lineItem:       [ { position: 30, label: 'Réservation', importance: #HIGH } ],
+         selectionField: [ { position: 20 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 30 } ]
+  Reservation;
+
+  @UI: { lineItem:       [ { position: 40, label: 'Division', importance: #HIGH } ],
+         selectionField: [ { position: 30 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 40 } ]
+  Plant;
+
+  @UI: { lineItem:       [ { position: 50, label: 'Article', importance: #HIGH } ],
+         selectionField: [ { position: 40 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 50 } ]
+  Material;
+
+  @UI.lineItem: [ { position: 60, label: 'Désignation', importance: #MEDIUM } ]
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 60 } ]
+  PurchaseRequisitionItemText;
+
+  @UI.lineItem: [ { position: 70, label: 'Quantité', importance: #MEDIUM } ]
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 70 } ]
+  RequestedQuantity;
+
+  @UI.lineItem: [ { position: 80, label: 'Date de livraison', importance: #MEDIUM } ]
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 80 } ]
+  DeliveryDate;
+
+  @UI.lineItem: [ { position: 90, label: 'Montant', importance: #LOW } ]
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 90 } ]
+  ItemAmount;
+
+  -- statut du choix : « À traiter » pour l'essentiel de la liste, « Affectation refusée »
+  -- pour les postes dont la mise à jour de la DA a échoué (criticité rouge)
+  @UI: { lineItem:       [ { position: 100, label: 'Statut', criticality: 'SelectionCriticality',
+                             importance: #HIGH } ],
+         selectionField: [ { position: 50 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpChoix', position: 10 } ]
+  SelectionStatus;
+
+  @UI.hidden: true
+  SelectionStatusText;
+
+  @UI.hidden: true
+  SelectionCriticality;
+
+  @UI.hidden: true
+  OriginTypeText;
+
+  @UI: { lineItem:       [ { position: 110, label: 'Origine', importance: #LOW } ],
+         selectionField: [ { position: 60 } ] }
+  @UI.fieldGroup: [ { qualifier: 'GrpBesoin', position: 100 } ]
+  OriginType;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpChoix', position: 20, label: 'Type de source' } ]
+  SelectedSourceType;
+
+  @UI.lineItem: [ { position: 120, label: 'Source retenue', importance: #MEDIUM } ]
+  @UI.fieldGroup: [ { qualifier: 'GrpChoix', position: 30 } ]
+  SelectedSourceName;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpChoix', position: 40, label: 'Prix net' } ]
+  SelectedNetPrice;
+
+  @UI.fieldGroup: [ { qualifier: 'GrpChoix', position: 50, label: 'Délai (jours)' } ]
+  SelectedLeadTimeDays;
+
+  -- message du BAPI quand l'affectation a été refusée : visible sur la page objet,
+  -- c'est lui qui dit à l'acheteur pourquoi le poste est encore là
+  @UI.fieldGroup: [ { qualifier: 'GrpChoix', position: 60, label: 'Message' } ]
+  SelectionMessage;
+}

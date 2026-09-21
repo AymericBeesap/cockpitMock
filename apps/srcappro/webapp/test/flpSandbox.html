@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approvisionnement des réservations - Launchpad local</title>
+
+    <script type="text/javascript">
+        // Launchpad local : chaque entrée d'« applications » joue le rôle d'un target mapping.
+        // Le groupe « Achats » reproduit ce que voit l'acheteur dans le Launchpad réel : deux
+        // tuiles standard (demande d'achat, commande d'achat) et une seule tuile spécifique.
+        // Les deux tuiles standard n'existent pas en local : elles ouvrent la page de
+        // substitution qui rappelle quel catalogue SAP activer.
+        window["sap-ushell-config"] = {
+            defaultRenderer: "fiori2",
+            bootstrapPlugins: {
+                "RuntimeAuthoringPlugin": {
+                    component: "sap.ushell.plugins.rta",
+                    config: {
+                        validateAppVersion: false
+                    }
+                }
+            },
+            renderers: {
+                fiori2: {
+                    componentData: {
+                        config: {
+                            enableSearch: false,
+                            rootIntent: "Shell-home"
+                        }
+                    }
+                }
+            },
+            services: {
+                LaunchPage: {
+                    adapter: {
+                        config: {
+                            groups: [
+                                {
+                                    id: "groupAchats",
+                                    title: "Achats",
+                                    isPreset: true,
+                                    isVisible: true,
+                                    isGroupLocked: false,
+                                    tiles: [
+                                        {
+                                            id: "tileSource",
+                                            title: "Sources à déterminer",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Sources à déterminer",
+                                                subtitle: "Postes de DA sans source",
+                                                icon: "sap-icon://source-code",
+                                                targetURL: "#ResaSource-determine"
+                                            }
+                                        },
+                                        {
+                                            id: "tilePurReqStd",
+                                            title: "Demandes d'achat (standard)",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Demandes d'achat",
+                                                subtitle: "Tuile SAP standard",
+                                                icon: "sap-icon://documents",
+                                                targetURL: "#PurchaseRequisition-manage"
+                                            }
+                                        },
+                                        {
+                                            id: "tilePurOrdStd",
+                                            title: "Commandes d'achat (standard)",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Commandes d'achat",
+                                                subtitle: "Tuile SAP standard",
+                                                icon: "sap-icon://cart",
+                                                targetURL: "#PurchaseOrder-manage"
+                                            }
+                                        },
+                                        {
+                                            id: "tileConvert",
+                                            title: "Conversion automatique",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Convertir les DA en commandes",
+                                                subtitle: "Transaction ME59N",
+                                                icon: "sap-icon://process",
+                                                targetURL: "#PurchaseRequisition-convertAuto"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "groupSuivi",
+                                    title: "Suivi des réservations",
+                                    isPreset: true,
+                                    isVisible: true,
+                                    isGroupLocked: false,
+                                    tiles: [
+                                        {
+                                            id: "tileTracking",
+                                            title: "Suivi des réservations",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Suivi des réservations",
+                                                subtitle: "Chaîne réservation - DA - commande",
+                                                icon: "sap-icon://tree",
+                                                targetURL: "#ResaChain-track"
+                                            }
+                                        },
+                                        {
+                                            id: "tileIdoc",
+                                            title: "Monitoring des IDocs",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                title: "Monitoring des IDocs",
+                                                subtitle: "Réservations en erreur",
+                                                icon: "sap-icon://message-error",
+                                                targetURL: "#ResaIdoc-monitor"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            applications: {
+                // ---- applications du projet : navigations opérationnelles
+                "ResaSource-determine": {
+                    title: "Sources à déterminer",
+                    description: "Postes de DA sans source d'approvisionnement",
+                    additionalInformation: "SAPUI5.Component=zlr.srcappro",
+                    applicationType: "URL",
+                    url: "../"
+                },
+                "ResaChain-track": {
+                    title: "Suivi des réservations",
+                    description: "Réservation, DA, commande",
+                    additionalInformation: "SAPUI5.Component=zlr.resatracking",
+                    applicationType: "URL",
+                    url: "/apps/resatracking"
+                },
+                "ResaIdoc-monitor": {
+                    title: "Monitoring des IDocs",
+                    description: "Réservations magasin en erreur",
+                    additionalInformation: "SAPUI5.Component=zlr.resaidoc",
+                    applicationType: "URL",
+                    url: "/apps/resaidoc"
+                },
+
+                // ---- TODO NAVIGATION : tuiles SAP standard et transaction, à activer dans le
+                // Launchpad réel. En local, elles ouvrent une page indiquant quoi configurer
+                // (navPlaceholder/targets.json).
+                "PurchaseRequisition-manage": {
+                    title: "À configurer : demandes d'achat (standard)",
+                    description: "Catalogue SAP du domaine achats",
+                    additionalInformation: "SAPUI5.Component=zresa.navplaceholder",
+                    applicationType: "URL",
+                    url: "./navPlaceholder"
+                },
+                "PurchaseOrder-manage": {
+                    title: "À configurer : commandes d'achat (standard)",
+                    description: "Catalogue SAP du domaine achats",
+                    additionalInformation: "SAPUI5.Component=zresa.navplaceholder",
+                    applicationType: "URL",
+                    url: "./navPlaceholder"
+                },
+                "PurchaseRequisition-displayFactSheet": {
+                    title: "À configurer : fiche demande d'achat",
+                    description: "Target mapping SAP",
+                    additionalInformation: "SAPUI5.Component=zresa.navplaceholder",
+                    applicationType: "URL",
+                    url: "./navPlaceholder"
+                },
+                "PurchaseOrder-displayFactSheet": {
+                    title: "À configurer : fiche commande d'achat",
+                    description: "Target mapping SAP",
+                    additionalInformation: "SAPUI5.Component=zresa.navplaceholder",
+                    applicationType: "URL",
+                    url: "./navPlaceholder"
+                },
+                "PurchaseRequisition-convertAuto": {
+                    title: "À configurer : ME59N",
+                    description: "Target mapping transaction",
+                    additionalInformation: "SAPUI5.Component=zresa.navplaceholder",
+                    applicationType: "URL",
+                    url: "./navPlaceholder"
+                }
+            }
+        };
+    </script>
+
+    <script src="../test-resources/sap/ushell/bootstrap/sandbox.js" id="sap-ushell-bootstrap"></script>
+
+    <script id="sap-ui-bootstrap"
+        src="../resources/sap-ui-core.js"
+        data-sap-ui-libs="sap.m, sap.ushell, sap.fe.templates, sap.ui.comp, sap.suite.ui.generic.template"
+        data-sap-ui-async="true"
+        data-sap-ui-preload="async"
+        data-sap-ui-theme="sap_fiori_3"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-language="fr"
+        data-sap-ui-resourceroots='{"zlr.srcappro": "../"}'
+        data-sap-ui-frameOptions="allow"
+        data-sap-ui-flexibilityServices='[{"connector": "LocalStorageConnector", "layers": ["ALL"]}]'>
+    </script>
+
+    <script>
+        sap.ui.getCore().attachInit(function () {
+            sap.ushell.Container.createRenderer().placeAt("content");
+        });
+    </script>
+</head>
+<body class="sapUiBody" id="content"></body>
+</html>

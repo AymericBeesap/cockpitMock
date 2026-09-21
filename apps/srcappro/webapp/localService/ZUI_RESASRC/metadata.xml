@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copie locale des métadonnées du service OData V4 ZUI_RESASRC_O4, pour exécution sur le
+    mock server. En réel, ces métadonnées sont générées par RAP à partir de la projection
+    ZC_ResaPurReqSource, de l'entité personnalisée ZI_ResaSourceOption, de la définition de
+    comportement et de l'extension de métadonnées : rien n'est à maintenir à la main.
+
+    Deux entités :
+      - PurReqItem   : postes de DA sans source, et l'action SelectSource ;
+      - SourceOption : sources disponibles pour un poste — le contenu de la pop-up.
+
+    L'annotation Common.ValueList sur les paramètres SourceId et SourceType de l'action est
+    la traduction de @Consumption.valueHelpDefinition (ZD_ResaSourceSelParam) : c'est elle
+    qui produit la pop-up de choix.
+-->
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core"/>
+    </edmx:Reference>
+
+    <edmx:DataServices>
+        <Schema Namespace="ZUI_RESASRC" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+            <!-- ============================================ poste de DA sans source -->
+            <EntityType Name="PurReqItemType">
+                <Key>
+                    <PropertyRef Name="PurchaseRequisition"/>
+                    <PropertyRef Name="PurchaseRequisitionItem"/>
+                </Key>
+                <Property Name="PurchaseRequisition" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="PurchaseRequisitionItem" Type="Edm.String" MaxLength="5" Nullable="false"/>
+                <Property Name="Plant" Type="Edm.String" MaxLength="4"/>
+                <Property Name="PurchasingGroup" Type="Edm.String" MaxLength="3"/>
+                <Property Name="PurchasingOrganization" Type="Edm.String" MaxLength="4"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40"/>
+                <Property Name="PurchaseRequisitionItemText" Type="Edm.String" MaxLength="40"/>
+                <Property Name="Reservation" Type="Edm.String" MaxLength="10"/>
+                <Property Name="OriginType" Type="Edm.String" MaxLength="4"/>
+                <Property Name="OriginTypeText" Type="Edm.String" MaxLength="40"/>
+                <Property Name="PurReqDate" Type="Edm.Date"/>
+                <Property Name="DeliveryDate" Type="Edm.Date"/>
+                <Property Name="RequestedQuantity" Type="Edm.Decimal" Precision="13" Scale="3"/>
+                <Property Name="BaseUnit" Type="Edm.String" MaxLength="3"/>
+                <Property Name="ItemAmount" Type="Edm.Decimal" Precision="11" Scale="2"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="5"/>
+                <Property Name="SelectedSourceType" Type="Edm.String" MaxLength="4"/>
+                <Property Name="SelectedSourceId" Type="Edm.String" MaxLength="10"/>
+                <Property Name="SelectedSourceName" Type="Edm.String" MaxLength="60"/>
+                <Property Name="SelectedNetPrice" Type="Edm.Decimal" Precision="11" Scale="2"/>
+                <Property Name="SelectedLeadTimeDays" Type="Edm.Decimal" Precision="3" Scale="0"/>
+                <Property Name="SelectionStatus" Type="Edm.String" MaxLength="4"/>
+                <Property Name="SelectionStatusText" Type="Edm.String" MaxLength="60"/>
+                <Property Name="SelectionCriticality" Type="Edm.Byte"/>
+                <Property Name="SelectionMessage" Type="Edm.String" MaxLength="220"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="LastChangedBy" Type="Edm.String" MaxLength="12"/>
+                <Property Name="LastChangedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+            </EntityType>
+
+            <!-- ====================================== sources disponibles (pop-up) -->
+            <EntityType Name="SourceOptionType">
+                <Key>
+                    <PropertyRef Name="PurchaseRequisition"/>
+                    <PropertyRef Name="PurchaseRequisitionItem"/>
+                    <PropertyRef Name="SourceType"/>
+                    <PropertyRef Name="SourceId"/>
+                </Key>
+                <Property Name="PurchaseRequisition" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="PurchaseRequisitionItem" Type="Edm.String" MaxLength="5" Nullable="false"/>
+                <Property Name="SourceType" Type="Edm.String" MaxLength="4" Nullable="false"/>
+                <Property Name="SourceId" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="SourceTypeText" Type="Edm.String" MaxLength="40"/>
+                <Property Name="SourceName" Type="Edm.String" MaxLength="60"/>
+                <Property Name="Supplier" Type="Edm.String" MaxLength="10"/>
+                <Property Name="PurchasingInfoRecord" Type="Edm.String" MaxLength="10"/>
+                <Property Name="PurchasingOrganization" Type="Edm.String" MaxLength="4"/>
+                <Property Name="SupplyingPlant" Type="Edm.String" MaxLength="4"/>
+                <Property Name="Availability" Type="Edm.String" MaxLength="1"/>
+                <Property Name="AvailabilityText" Type="Edm.String" MaxLength="40"/>
+                <Property Name="AvailabilityCriticality" Type="Edm.Byte"/>
+                <Property Name="AvailableQuantity" Type="Edm.Decimal" Precision="13" Scale="3"/>
+                <Property Name="BaseUnit" Type="Edm.String" MaxLength="3"/>
+                <Property Name="NetPrice" Type="Edm.Decimal" Precision="11" Scale="2"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="5"/>
+                <Property Name="LeadTimeDays" Type="Edm.Decimal" Precision="3" Scale="0"/>
+                <Property Name="SourceRank" Type="Edm.Int16"/>
+            </EntityType>
+
+            <!-- ============================================================ action -->
+            <Action Name="SelectSource" IsBound="true" EntitySetPath="_it">
+                <Parameter Name="_it" Type="ZUI_RESASRC.PurReqItemType" Nullable="false"/>
+                <Parameter Name="PurchaseRequisition" Type="Edm.String" MaxLength="10"/>
+                <Parameter Name="PurchaseRequisitionItem" Type="Edm.String" MaxLength="5"/>
+                <Parameter Name="SourceType" Type="Edm.String" MaxLength="4"/>
+                <Parameter Name="SourceId" Type="Edm.String" MaxLength="10"/>
+                <ReturnType Type="ZUI_RESASRC.PurReqItemType"/>
+            </Action>
+
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="PurReqItem" EntityType="ZUI_RESASRC.PurReqItemType"/>
+                <EntitySet Name="SourceOption" EntityType="ZUI_RESASRC.SourceOptionType"/>
+            </EntityContainer>
+
+            <!-- ================================================ annotations du LR -->
+            <Annotations Target="ZUI_RESASRC.PurReqItemType">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Poste sans source"/>
+                        <PropertyValue Property="TypeNamePlural" String="Postes de DA sans source d'approvisionnement"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="PurchaseRequisition"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="PurchaseRequisitionItemText"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>PurchaseRequisition</PropertyPath>
+                        <PropertyPath>PurchaseRequisitionItem</PropertyPath>
+                    </Collection>
+                </Annotation>
+
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>PurchaseRequisition</PropertyPath>
+                        <PropertyPath>Reservation</PropertyPath>
+                        <PropertyPath>Plant</PropertyPath>
+                        <PropertyPath>Material</PropertyPath>
+                        <PropertyPath>SelectionStatus</PropertyPath>
+                        <PropertyPath>OriginType</PropertyPath>
+                    </Collection>
+                </Annotation>
+
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="PurReqDate"/>
+                                    <PropertyValue Property="Descending" Bool="false"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <!-- Bouton « Retenir une source » : ouvre la boîte de dialogue de l'action,
+                             dont le champ « Source retenue » ouvre la pop-up des sources. -->
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Action" String="ZUI_RESASRC.SelectSource"/>
+                            <PropertyValue Property="Label" String="Retenir une source"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PurchaseRequisition"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PurchaseRequisitionItem"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Reservation"/>
+                            <PropertyValue Property="Label" String="Réservation"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Plant"/>
+                            <PropertyValue Property="Label" String="Division"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Material"/>
+                            <PropertyValue Property="Label" String="Article"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PurchaseRequisitionItemText"/>
+                            <PropertyValue Property="Label" String="Désignation"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="RequestedQuantity"/>
+                            <PropertyValue Property="Label" String="Quantité"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="DeliveryDate"/>
+                            <PropertyValue Property="Label" String="Date de livraison"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ItemAmount"/>
+                            <PropertyValue Property="Label" String="Montant"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SelectionStatus"/>
+                            <PropertyValue Property="Label" String="Statut"/>
+                            <PropertyValue Property="Criticality" Path="SelectionCriticality"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SelectedSourceName"/>
+                            <PropertyValue Property="Label" String="Source retenue"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="ID" String="Besoin"/>
+                            <PropertyValue Property="Label" String="Besoin"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GrpBesoin"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="ID" String="Choix"/>
+                            <PropertyValue Property="Label" String="Source retenue"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GrpChoix"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+
+                <Annotation Term="UI.FieldGroup" Qualifier="GrpBesoin">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="PurchaseRequisition"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="PurchaseRequisitionItem"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="Reservation"/>
+                                    <PropertyValue Property="Label" String="Réservation"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="OriginType"/>
+                                    <PropertyValue Property="Label" String="Origine"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="Plant"/>
+                                    <PropertyValue Property="Label" String="Division"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="Material"/>
+                                    <PropertyValue Property="Label" String="Article"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="PurchaseRequisitionItemText"/>
+                                    <PropertyValue Property="Label" String="Désignation"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="RequestedQuantity"/>
+                                    <PropertyValue Property="Label" String="Quantité"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="DeliveryDate"/>
+                                    <PropertyValue Property="Label" String="Date de livraison"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="ItemAmount"/>
+                                    <PropertyValue Property="Label" String="Montant"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+
+                <Annotation Term="UI.FieldGroup" Qualifier="GrpChoix">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="SelectionStatus"/>
+                                    <PropertyValue Property="Label" String="Statut"/>
+                                    <PropertyValue Property="Criticality" Path="SelectionCriticality"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="SelectedSourceType"/>
+                                    <PropertyValue Property="Label" String="Type de source"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="SelectedSourceName"/>
+                                    <PropertyValue Property="Label" String="Source retenue"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="SelectedNetPrice"/>
+                                    <PropertyValue Property="Label" String="Prix net"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="SelectedLeadTimeDays"/>
+                                    <PropertyValue Property="Label" String="Délai (jours)"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="SelectionMessage"/>
+                                    <PropertyValue Property="Label" String="Message"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Action" String="ZUI_RESASRC.SelectSource"/>
+                            <PropertyValue Property="Label" String="Retenir une source"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+
+            <!-- Libellés des propriétés : en réel, ils viennent des @EndUserText.label du CDS et
+                 des éléments de données. Ils alimentent la barre de filtres et les en-têtes de
+                 colonnes qui n'ont pas de Label explicite. -->
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/PurchaseRequisition">
+                <Annotation Term="Common.Label" String="Demande d'achat"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/PurchaseRequisitionItem">
+                <Annotation Term="Common.Label" String="Poste"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/Reservation">
+                <Annotation Term="Common.Label" String="Réservation"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/Plant">
+                <Annotation Term="Common.Label" String="Division"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/Material">
+                <Annotation Term="Common.Label" String="Article"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/PurchaseRequisitionItemText">
+                <Annotation Term="Common.Label" String="Désignation"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/PurchasingGroup">
+                <Annotation Term="Common.Label" String="Groupe d'acheteurs"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/PurReqDate">
+                <Annotation Term="Common.Label" String="Date de la demande"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/DeliveryDate">
+                <Annotation Term="Common.Label" String="Date de livraison"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectedSourceType">
+                <Annotation Term="Common.Label" String="Type de source"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectedSourceId">
+                <Annotation Term="Common.Label" String="Identifiant de la source"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectedSourceName">
+                <Annotation Term="Common.Label" String="Source retenue"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectedLeadTimeDays">
+                <Annotation Term="Common.Label" String="Délai (jours)"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectionMessage">
+                <Annotation Term="Common.Label" String="Message"/>
+            </Annotations>
+
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/RequestedQuantity">
+                <Annotation Term="Common.Label" String="Quantité"/>
+                <Annotation Term="Measures.Unit" Path="BaseUnit"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/ItemAmount">
+                <Annotation Term="Common.Label" String="Montant"/>
+                <Annotation Term="Measures.ISOCurrency" Path="Currency"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectedNetPrice">
+                <Annotation Term="Common.Label" String="Prix net retenu"/>
+                <Annotation Term="Measures.ISOCurrency" Path="Currency"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectionStatus">
+                <Annotation Term="Common.Label" String="Statut"/>
+                <Annotation Term="Common.Text" Path="SelectionStatusText">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/OriginType">
+                <Annotation Term="Common.Label" String="Origine"/>
+                <Annotation Term="Common.Text" Path="OriginTypeText">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectionStatusText">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/OriginTypeText">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.PurReqItemType/SelectionCriticality">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+
+            <!-- ============================ colonnes de la pop-up des sources -->
+            <Annotations Target="ZUI_RESASRC.SourceOptionType">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Source d'approvisionnement"/>
+                        <PropertyValue Property="TypeNamePlural" String="Sources disponibles"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="SourceName"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>SourceType</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceType"/>
+                            <PropertyValue Property="Label" String="Type de source"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceId"/>
+                            <PropertyValue Property="Label" String="Source"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceName"/>
+                            <PropertyValue Property="Label" String="Désignation"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Availability"/>
+                            <PropertyValue Property="Label" String="Disponibilité"/>
+                            <PropertyValue Property="Criticality" Path="AvailabilityCriticality"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="AvailableQuantity"/>
+                            <PropertyValue Property="Label" String="Quantité disponible"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="NetPrice"/>
+                            <PropertyValue Property="Label" String="Prix net"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="LeadTimeDays"/>
+                            <PropertyValue Property="Label" String="Délai (jours)"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SourceRank"/>
+                            <PropertyValue Property="Label" String="Rang"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/SourceType">
+                <Annotation Term="Common.Label" String="Type de source"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/SourceId">
+                <Annotation Term="Common.Label" String="Source"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/SourceName">
+                <Annotation Term="Common.Label" String="Désignation"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/Availability">
+                <Annotation Term="Common.Label" String="Disponibilité"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/AvailableQuantity">
+                <Annotation Term="Common.Label" String="Quantité disponible"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/NetPrice">
+                <Annotation Term="Common.Label" String="Prix net"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/LeadTimeDays">
+                <Annotation Term="Common.Label" String="Délai (jours)"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/SourceRank">
+                <Annotation Term="Common.Label" String="Rang"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/SourceType">
+                <Annotation Term="Common.Text" Path="SourceTypeText">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/Availability">
+                <Annotation Term="Common.Text" Path="AvailabilityText">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/AvailableQuantity">
+                <Annotation Term="Measures.Unit" Path="BaseUnit"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SourceOptionType/NetPrice">
+                <Annotation Term="Measures.ISOCurrency" Path="Currency"/>
+            </Annotations>
+
+            <!-- ===================== paramètres de l'action et aide à la saisie -->
+            <Annotations Target="ZUI_RESASRC.SelectSource(ZUI_RESASRC.PurReqItemType)/PurchaseRequisition">
+                <Annotation Term="Common.Label" String="Demande d'achat"/>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/ReadOnly"/>
+            </Annotations>
+            <Annotations Target="ZUI_RESASRC.SelectSource(ZUI_RESASRC.PurReqItemType)/PurchaseRequisitionItem">
+                <Annotation Term="Common.Label" String="Poste"/>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/ReadOnly"/>
+            </Annotations>
+
+            <Annotations Target="ZUI_RESASRC.SelectSource(ZUI_RESASRC.PurReqItemType)/SourceType">
+                <Annotation Term="Common.Label" String="Type de source"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="SourceOption"/>
+                        <PropertyValue Property="Label" String="Sources disponibles"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SourceType"/>
+                                    <PropertyValue Property="ValueListProperty" String="SourceType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SourceId"/>
+                                    <PropertyValue Property="ValueListProperty" String="SourceId"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterIn">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="PurchaseRequisition"/>
+                                    <PropertyValue Property="ValueListProperty" String="PurchaseRequisition"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterIn">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="PurchaseRequisitionItem"/>
+                                    <PropertyValue Property="ValueListProperty" String="PurchaseRequisitionItem"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="SourceName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
+            <!-- C'est cette annotation qui ouvre la pop-up des sources disponibles :
+                 les colonnes viennent de UI.LineItem de SourceOptionType, le filtrage du poste
+                 des deux paramètres ValueListParameterIn, et le type de source retenu est
+                 rapatrié dans le paramètre SourceType (ValueListParameterOut). -->
+            <Annotations Target="ZUI_RESASRC.SelectSource(ZUI_RESASRC.PurReqItemType)/SourceId">
+                <Annotation Term="Common.Label" String="Source retenue"/>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="SourceOption"/>
+                        <PropertyValue Property="Label" String="Sources disponibles"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SourceId"/>
+                                    <PropertyValue Property="ValueListProperty" String="SourceId"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SourceType"/>
+                                    <PropertyValue Property="ValueListProperty" String="SourceType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterIn">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="PurchaseRequisition"/>
+                                    <PropertyValue Property="ValueListProperty" String="PurchaseRequisition"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterIn">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="PurchaseRequisitionItem"/>
+                                    <PropertyValue Property="ValueListProperty" String="PurchaseRequisitionItem"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="SourceName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Availability"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="NetPrice"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LeadTimeDays"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
+            <!-- Rafraîchir la ligne après l'action : le statut et la source retenue changent. -->
+            <Annotations Target="ZUI_RESASRC.SelectSource(ZUI_RESASRC.PurReqItemType)">
+                <Annotation Term="Common.SideEffects">
+                    <Record Type="Common.SideEffectsType">
+                        <PropertyValue Property="TargetProperties">
+                            <Collection>
+                                <String>_it/SelectionStatus</String>
+                                <String>_it/SelectionStatusText</String>
+                                <String>_it/SelectionCriticality</String>
+                                <String>_it/SelectedSourceType</String>
+                                <String>_it/SelectedSourceId</String>
+                                <String>_it/SelectedSourceName</String>
+                                <String>_it/SelectedNetPrice</String>
+                                <String>_it/SelectedLeadTimeDays</String>
+                                <String>_it/SelectionMessage</String>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

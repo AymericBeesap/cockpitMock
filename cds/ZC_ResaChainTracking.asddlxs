@@ -38,12 +38,14 @@ annotate view ZC_ResaChainTracking with
   @UI.hidden: true
   ChainStageText;
 
-  -- Navigation : bouton « Cockpit » de la barre d'outils (ResaCockpit-display, inbound du manifeste
-  -- de zovp.resacockpit ; target mapping à créer dans le catalogue Z, §E2)
+  -- Navigation : bouton « Sources à déterminer » de la barre d'outils (ResaSource-determine,
+  -- inbound du manifeste de zlr.srcappro ; target mapping dans le catalogue ZRESA_SRC_TC).
+  -- Remplace le bouton « Cockpit » : l'Overview Page est abandonnée au profit des tuiles standard
+  -- de demande d'achat et de commande d'achat.
   @UI: { lineItem:       [ { position: 10, label: 'Réservation', importance: #HIGH },
                            { type: #FOR_INTENT_BASED_NAVIGATION, requiresContext: false,
-                             semanticObject: 'ResaCockpit', semanticObjectAction: 'display',
-                             label: 'Cockpit' } ],
+                             semanticObject: 'ResaSource', semanticObjectAction: 'determine',
+                             label: 'Sources à déterminer' } ],
          selectionField: [ { position: 10 } ] }
   @UI.fieldGroup: [ { qualifier: 'GrpOrigine', position: 10 } ]
   Reservation;

@@ -1,0 +1,35 @@
+// Détermination de la source d'approvisionnement — business object de base.
+//
+// « managed with unmanaged save » : la partie managed apporte le tampon transactionnel, les
+// actions, le contrôle des fonctionnalités et des autorisations ; la sauvegarde est reprise en
+// main parce qu'elle doit faire deux choses qu'aucune sauvegarde managée ne sait faire —
+// un MODIFY sur ZTRESA_SRCSEL (la ligne n'existe pas tant que rien n'est retenu) et un appel
+// BAPI de mise à jour de la demande d'achat.
+//
+// Sans draft : l'action écrit directement, le poste de DA est verrouillé en pessimiste.
+// Ni create, ni update, ni delete ne sont exposés : la seule écriture possible est SelectSource.
+//
+// ⚠️ À vérifier (relevé R6) : si le compilateur refuse « strict; », retirer la ligne —
+// la sémantique du business object est inchangée.
+
+managed with unmanaged save implementation in class zbp_r_resapurreqsource unique;
+strict;
+
+define behavior for ZR_ResaPurReqSource alias PurReqItem
+lock master unmanaged
+authorization master ( instance )
+etag master LastChangedAt
+{
+  // « internal » : l'action met à jour l'instance par EML en mode local, mais rien n'est
+  // exposé dans le service. Vu d'OData, ce business object est en lecture seule et n'offre
+  // qu'une action.
+  internal update;
+
+  // Retenir une source : ouvre la pop-up de choix (aide à la saisie du paramètre SourceId),
+  // enregistre le choix et affecte la source au poste de demande d'achat.
+  action ( features : instance, authorization : instance )
+    SelectSource parameter ZD_ResaSourceSelParam result [1] $self;
+
+  // Pas de clause « mapping for ztresa_srcsel » : la sauvegarde étant non managée, c'est
+  // ZBP_R_RESAPURREQSOURCE qui compose la ligne de table, champ par champ et sous son contrôle.
+}
