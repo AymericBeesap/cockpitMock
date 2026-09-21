@@ -1,0 +1,59 @@
+{
+    "PurchaseRequisition-manage": {
+        "title": "Demandes d'achat — tuile SAP standard",
+        "targetType": "Application SAP standard (List Report)",
+        "specReference": "§Partie I du MO, relevé R6",
+        "origin": "Launchpad — groupe « Achats »",
+        "steps": [
+            "Relever dans la Fiori Apps Reference Library l'identifiant et l'intention réels de la tuile de gestion des demandes d'achat pour S/4HANA 2021 (candidats : « Process Purchase Requisitions », « Manage Purchase Requisitions »).",
+            "Activer le service OData et l'application BSP standard correspondants (task list de l'app ou /UI2/FLP).",
+            "Ajouter le catalogue SAP contenant cette tuile au rôle PFCG ZR_RESA_SRC, ainsi que le groupe.",
+            "Corriger l'intention dans flpSandbox.html et dans targets.json si elle diffère de PurchaseRequisition-manage."
+        ]
+    },
+    "PurchaseOrder-manage": {
+        "title": "Commandes d'achat — tuile SAP standard",
+        "targetType": "Application SAP standard (List Report)",
+        "specReference": "§Partie I du MO, relevé R6",
+        "origin": "Launchpad — groupe « Achats »",
+        "steps": [
+            "Relever dans la Fiori Apps Reference Library l'identifiant et l'intention réels de la tuile de gestion des commandes d'achat pour S/4HANA 2021 (candidat : « Manage Purchase Orders »).",
+            "Activer le service OData et l'application BSP standard correspondants.",
+            "Ajouter le catalogue SAP contenant cette tuile au rôle PFCG ZR_RESA_SRC, ainsi que le groupe."
+        ]
+    },
+    "PurchaseRequisition-displayFactSheet": {
+        "title": "Fiche de la demande d'achat",
+        "targetType": "Application SAP standard (fiche)",
+        "specReference": "§Partie I du MO",
+        "origin": "Suivi des réservations — page objet, bouton « Afficher la demande d'achat »",
+        "steps": [
+            "Relever dans le Launchpad Designer (catalogues SAP du domaine achats) l'objet sémantique et l'action réels de la fiche de demande d'achat.",
+            "S'ils diffèrent de PurchaseRequisition-displayFactSheet, corriger @UI.identification de PurchaseRequisition dans cds/ZC_ResaChainTracking.asddlxs.",
+            "Ajouter le catalogue SAP contenant ce target mapping au rôle PFCG des utilisateurs du suivi."
+        ]
+    },
+    "PurchaseOrder-displayFactSheet": {
+        "title": "Fiche de la commande d'achat",
+        "targetType": "Application SAP standard (fiche)",
+        "specReference": "§Partie I du MO",
+        "origin": "Suivi des réservations — page objet, bouton « Afficher la commande d'achat »",
+        "steps": [
+            "Relever dans le Launchpad Designer (catalogues SAP du domaine achats) l'objet sémantique et l'action réels de la fiche de commande d'achat.",
+            "S'ils diffèrent de PurchaseOrder-displayFactSheet, corriger @UI.identification de PurchaseOrder dans cds/ZC_ResaChainTracking.asddlxs.",
+            "Ajouter le catalogue SAP contenant ce target mapping au rôle PFCG des utilisateurs du suivi."
+        ]
+    },
+    "PurchaseRequisition-convertAuto": {
+        "title": "Conversion automatique en commandes (ME59N)",
+        "targetType": "Transaction SAP GUI",
+        "specReference": "§Partie I du MO",
+        "origin": "Launchpad — groupe « Achats »",
+        "steps": [
+            "Ouvrir le Launchpad Designer sur le catalogue Z du projet (ZRESA_SRC_TC).",
+            "Créer un target mapping : objet sémantique PurchaseRequisition, action convertAuto.",
+            "Type d'application : Transaction ; code de transaction ME59N ; alias système du back-end.",
+            "Ajouter l'autorisation de transaction ME59N au rôle PFCG ZR_RESA_SRC."
+        ]
+    }
+}

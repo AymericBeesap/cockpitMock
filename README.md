@@ -1,53 +1,46 @@
-# Cockpit de suivi des réservations magasin
+# Détermination de la source d'approvisionnement — et suivi des réservations magasin
 
-Implémentation du mode opératoire [.claude/Spec.md](.claude/Spec.md) (MO-OVP-RESACOCKPIT-2021FPS02-v1.0) :
-une **Overview Page** (indicateurs) et un **List Report** (suivi ligne à ligne) SAP Fiori elements OData V2,
-sur un modèle 100 % ABAP CDS — SAP S/4HANA 2021 FPS02, SAPUI5 1.96.
+Le cockpit s'appuie sur les **tuiles Fiori standard** de demande d'achat et de commande d'achat.
+Une seule application est spécifique : la **liste des postes de DA sans source d'approvisionnement**,
+avec une **pop-up de choix** parmi les sources disponibles, rendues par un programme de S/4.
+
+Réalisation en **RAP** — OData V4, Fiori elements V4, sans draft — SAP S/4HANA 2021 FPS02, SAPUI5 1.96.
+Mode opératoire : **[.claude/Spec-SourceAppro-RAP.md](.claude/Spec-SourceAppro-RAP.md)**
+(MO-SRCAPPRO-RAP-2021FPS02-v2.0).
 
 ## Contenu
 
-| Dossier | Contenu | Partie du MO |
+| Dossier | Contenu | Référence |
 |---|---|---|
-| [cds/](cds/) | Vues CDS (`.asddls`) et extensions de métadonnées (`.asddlxs`) à recopier dans Eclipse ADT | A |
-| [apps/resacockpit/](apps/resacockpit/) | Overview Page `zovp.resacockpit`, intention `ResaCockpit-display` | B |
-| [apps/resatracking/](apps/resatracking/) | List Report + page objet `zlr.resatracking`, intention `ResaChain-track` | C |
-| [apps/resaidoc/](apps/resaidoc/) | Monitoring des IDocs `zlr.resaidoc`, intention `ResaIdoc-monitor` | A7.3 |
-| [apps/alt1creation/](apps/alt1creation/) | **Alternative 1** — création d'une DA `zlr.alt1creation`, intention `ResaPurReq-create` | [MO source appro](.claude/Spec-SourceAppro.md) |
-| [apps/alt1source/](apps/alt1source/) | **Alternative 1** — détermination de la source (toutes les DA) `zlr.alt1source`, intention `ResaSource-determineAll` | idem |
-| [apps/alt2creation/](apps/alt2creation/) | **Alternative 2** — commande de réapprovisionnement `zlr.alt2creation`, intention `ResaReplen-order` | idem |
-| [apps/alt2source/](apps/alt2source/) | **Alternative 2** — réservations à approvisionner `zlr.alt2source`, intention `ResaSource-determineResa` | idem |
-| [apps/sourcecommon/](apps/sourcecommon/) | Extension d'interface mutualisée par les 4 applications ci-dessus | idem |
+| [abap/](abap/) | Objets RAP de la détermination de la source : table, vues CDS, entité personnalisée, business object, classes, service | [MO RAP](.claude/Spec-SourceAppro-RAP.md) parties A à E |
+| [apps/srcappro/](apps/srcappro/) | Application `zlr.srcappro`, intention `ResaSource-determine` — la seule tuile spécifique | idem, partie E3 |
+| [cds/](cds/) | Vues CDS OData V2 du suivi de la chaîne et du monitoring IDoc | [MO Cockpit](.claude/Spec.md) |
+| [apps/resatracking/](apps/resatracking/) | Suivi de la chaîne `zlr.resatracking`, intention `ResaChain-track` | idem, partie C |
+| [apps/resaidoc/](apps/resaidoc/) | Monitoring des IDocs `zlr.resaidoc`, intention `ResaIdoc-monitor` | idem, §A7.3 |
+| [tools/generate-mockdata.js](tools/generate-mockdata.js) | Données de démonstration cohérentes des trois services mockés | — |
 
-## Maquettes des deux alternatives (remplacement de « commande à passer »)
+Les documents de l'étape précédente — arbitrage entre deux alternatives, puis socle RAP complet à
+quatre applications — sont conservés dans [.claude/archive/](.claude/archive/). Ils gardent le
+contexte métier, les avis exprimés et les questions ouvertes.
 
-Le programme « commande à passer » de SAP Retail Store (plus de 600 000 appels, 1,5 M avec les programmes dérivés)
-doit être scindé en deux processus : gestion de la commande de réservation et commande de réapprovisionnement.
-Deux alternatives sont **maquettées à iso-données** pour arbitrage, sur un **socle commun** de détermination de la
-source d'approvisionnement — fournisseur EDI, entrepôt, centre voisin, commande petite caisse — qui concentre la
-complexité. Aucune source n'est proposée automatiquement : le comparatif est restitué par poste, le choix est manuel.
+## Comment la pop-up fonctionne
 
-Contexte complet, avis exprimés, modèle de données et questions ouvertes :
-**[.claude/Spec-SourceAppro.md](.claude/Spec-SourceAppro.md)**.
-
-> **Écart assumé** : les quatre applications partagent un service unique, donc un seul jeu d'annotations.
-> Les boutons de création apparaissent aussi dans les écrans de détermination, alors que l'Alternative 1
-> prévoit une tuile de détermination sans création. Dans la cible, une vue de consommation par tuile
-> porterait ses propres annotations.
-
-```sh
-npm run start:alt1           # Alternative 1 - détermination de la source (toutes les DA)
-npm run start:alt1creation   # Alternative 1 - création d'une demande d'achat
-npm run start:alt2           # Alternative 2 - réservations à approvisionner
-npm run start:alt2creation   # Alternative 2 - commande de réapprovisionnement
-npm run mockdata             # régénère les données de démonstration
+```
+liste des postes sans source
+        │  bouton « Retenir une source »
+boîte de dialogue de l'action SelectSource
+        │  champ « Source retenue »
+pop-up : aide à la saisie sur l'entité personnalisée ZI_ResaSourceOption
+        │  ZCL_RESA_SRC_QUERY → ZCL_RESA_SRC_PROVIDER → ⟨PROGRAMME_SOURCES⟩ dans S/4
+choix retenu → trace dans ZTRESA_SRCSEL + écriture de la source dans la DA (BAPI_PR_CHANGE)
+        │
+le poste quitte la liste → conversion par les tuiles standard (ME59N, Manage Purchase Orders)
 ```
 
-Chaque application contient :
-
-- `ui5.yaml` — exécution contre le système S/4HANA (proxy `/sap`, **URL et mandant à renseigner**) ;
-- `ui5-mock.yaml` — exécution locale sur le mock server (`webapp/localService`) ;
-- `ui5-deploy.yaml` — déploiement BSP (**package et ordre de transport à renseigner**) ;
-- `webapp/localService/<service>/` — `metadata.xml`, `annotations.xml` (copie de l'annotation service `_VAN`) et données de test.
+Rien n'est écrit en JavaScript : la pop-up est produite par l'annotation
+`@Consumption.valueHelpDefinition` de `ZD_ResaSourceSelParam`, et ses colonnes par les
+`@UI.lineItem` de `ZI_ResaSourceOption`. Aucune source n'est présélectionnée : le comparatif est
+restitué, le choix est manuel.
 
 ## Démarrage local
 
@@ -56,102 +49,91 @@ Prérequis : Node.js 20.11 ou supérieur.
 ```sh
 npm install
 npm run start:launchpad  # launchpad local : accueil avec les tuiles
-npm run start:cockpit    # même launchpad, ouvert sur le cockpit
-npm run start:tracking   # même launchpad, ouvert sur le suivi détaillé
+npm run start:src        # même launchpad, ouvert sur la détermination de la source
+npm run start:tracking   # même launchpad, ouvert sur le suivi de la chaîne
 npm run start:idoc       # même launchpad, ouvert sur le monitoring des IDocs
+npm run mockdata         # régénère les données de démonstration
 npm run build            # build des trois applications
 ```
 
-Toutes ces commandes démarrent **le même serveur** (configuration `apps/resacockpit/ui5-mock.yaml`, port 8080) qui sert
-les trois applications, les quatre services mockés et la page de substitution : les liens fonctionnent quelle que soit
-la commande utilisée. N'en lancer qu'une à la fois. `npm run start-standalone` dans `apps/resatracking` ou `apps/resaidoc`
-ouvre l'application seule, sans navigation vers les autres applications.
+Toutes ces commandes démarrent **le même serveur** (configuration `apps/srcappro/ui5-mock.yaml`,
+port 8080) qui sert les trois applications, le service V4 et les deux services V2 mockés, ainsi que
+la page de substitution de navigation. N'en lancer qu'une à la fois.
 
-> **⚠️ Redémarrer après chaque modification** de `ui5-mock.yaml`, des métadonnées, des annotations ou des données mockées :
-> le serveur les charge au démarrage. Arrêter le serveur (Ctrl+C) puis relancer la commande.
+> **⚠️ Redémarrer après chaque modification** de `ui5-mock.yaml`, des métadonnées, des annotations
+> ou des données mockées : le serveur les charge au démarrage.
 
 | Symptôme en local | Cause | Action |
 |---|---|---|
-| Aucun lien ne fonctionne, `failed to load .../Component.js` en console | Serveur démarré avant l'ajout de la navigation, ou application lancée seule (`start-standalone`) | Arrêter le serveur et relancer `npm run start:launchpad` |
-| Cartes vides ou page du cockpit qui ne finit pas de charger | Serveur démarré avec une ancienne configuration pointant vers des fichiers supprimés | Idem : arrêter et relancer |
-| Port 8080 déjà utilisé | Un autre serveur du projet tourne encore | Arrêter l'autre serveur avant de relancer |
-| Erreur 500 en appelant une action en REST direct (curl, Postman) | Le mock server exige un corps de requête typé | Envoyer un corps JSON `{}` avec `Content-Type: application/json`, en plus des paramètres d'URL. Depuis les écrans (`callFunction`), l'appel fonctionne sans rien faire |
-| Les actions ne reflètent plus les données d'origine | Les actions modifient l'état **en mémoire** du mock server | Redémarrer le serveur : les fichiers de données sont rechargés tels quels |
+| `EADDRINUSE: Port 8080 is already in use` | Un autre serveur du projet tourne encore | Arrêter l'autre serveur, ou lancer avec `--port 8081` |
+| Aucun lien ne fonctionne, `failed to load .../Component.js` | Serveur démarré avant l'ajout d'une application | Arrêter et relancer `npm run start:launchpad` |
+| La pop-up des sources s'ouvre vide | Le poste de DA n'est pas transmis en filtre | C'est le relevé R5 du MO : voir les replis au §2.3 |
+| Les actions ne reflètent plus les données d'origine | Le mock server modifie son état **en mémoire** | Redémarrer : les fichiers de données sont rechargés tels quels |
 
-Pour travailler contre le système : renseigner `backend.url` / `client` dans `ui5.yaml`, puis `npm start` dans le dossier de l'application.
+Pour travailler contre le système : renseigner `backend.url` / `client` dans
+`apps/srcappro/ui5.yaml`, puis `npm start` dans le dossier de l'application.
 
-Les données de test : 36 postes de DA (13 en attente, taux de conversion des réservations 70,8 %), 30 IDocs dont 8 en erreur.
-Le mock server ne sait pas agréger une requête analytique V2 : le hook
-[analyticalAggregation.js](apps/resacockpit/webapp/localService/analyticalAggregation.js) regroupe les lignes selon les
-dimensions de `$select`, recalcule les formules (taux de conversion, taux d'intégration) et applique `$skip` / `$top`
-après agrégation (en-têtes KPI en `$top=1`). `MOCK_AGG_DEBUG=1` trace les propriétés reçues par le hook.
+## Données de démonstration
 
-Valeurs attendues en local : 11 postes en attente (vert), taux de conversion 71 % (critique), 8 IDocs en erreur (critique).
-Deux postes sont soldés par une commande petite caisse (`ZPC`) et ne comptent donc plus parmi les postes en attente.
+36 postes de DA dont **13 sans source** (taux de conversion des réservations 70,8 %), 30 IDocs dont
+8 en erreur, 30 sources réparties sur les postes ouverts.
 
-## Ordre d'activation des vues CDS
+Cas de figure volontairement présents, pour éprouver l'écran sans S/4 :
 
-1. `ZI_ResaIdocLastStatus` — 2. `ZI_ResaIdocMonitor` — 3. `ZI_ResaChainCube` — 4. `ZC_ResaChainQuery` —
-5. `ZC_ResaIdocQuery` — 6. `ZC_ResaChainTracking` — 7. `ZC_ResaIdocTracking` — 8. les quatre extensions de métadonnées.
-
-Puis enregistrer dans `/IWFND/MAINT_SERVICE` : `ZCRESAKPI_CDS`, `ZCRESAIDKPI_CDS`, `ZCRESATRACK_CDS` (et `ZCRESAIDTRACK_CDS` si le monitoring IDoc est publié).
-
-> **⚠️ À vérifier avant activation (§A3)** — les noms réels dans `I_PurchaseRequisitionItem` :
-> `ZZReservation`, `SalesOrder` / `SalesOrderItem`, `PurchaseOrder` / `PurchaseOrderItem`, `PurchaseRequisitionPrice`.
-> Vérifier aussi le regroupement des statuts IDoc (§2.3) dans `ZI_ResaIdocMonitor`.
-
-## Écarts et compléments par rapport au MO
-
-| # | Constat dans le MO | Traitement |
+| Cas | Où | Attendu |
 |---|---|---|
-| 1 | La carte `card03_idoc` référence `Chart#ErreursParMagasin` et `DataPoint#IDocsEnErreur`, non définis | Extension `ZC_ResaIdocQuery.asddlxs` créée (seuils 5 / 15, plus `TauxIntegration`) |
-| 2 | La carte `card02_conversion` est analytique sans graphique | Ajout de `Chart#RepartitionParEtape` (anneau par étape) |
-| 3 | `ZC_ResaIdocTracking` est annotée (§A7.3) mais jamais définie | Vue créée sur `ZI_ResaIdocMonitor` ; pas d'application Fiori dédiée (tuile optionnelle, §E2) |
-| 4 | La carte `card04_liste` doit montrer les postes « les plus anciens en attente » sans filtre ni tri | `SelectionVariant#EnAttente` (`ChainStage = PR`) et `PresentationVariant#Anciens` (date croissante) |
-| 5 | La carte de liste doit ouvrir la page objet du suivi (§D1) | `Identification#Carte` vers `ResaChain-track`, clés du poste passées en paramètres |
-| 6 | §A7.2 et §D2 annotent `ZC_ResaChainTracking` dans deux extensions de la même couche | Fusionnées en une seule (une seule MDE par couche) |
-| 7 | `@UI.selectionVariant.parameters` est réservé aux paramètres CDS | Remplacé par `filter: 'OriginType EQ "RESA"'` |
-| 8 | Origine et étape affichées sous forme de codes (`RESA`, `PR`…) | Libellés `OriginTypeText` / `ChainStageText` calculés dans le cube, `@ObjectModel.text.element` |
-| 9 | Les cartes analytiques exigent `UI.Identification` pour la navigation au clic | Intentions `ResaChain-track` (requête chaîne) et `ResaIdoc-monitor` (requête IDoc) |
-| 10 | Le List Report V2 attend « Exécuter » avant de charger | `dataLoadSettings.loadDataOnAppLaunch: always` |
+| Source fournisseur retenue | poste `0010010002` / `00010` | Statut « Source retenue », source écrite dans la DA |
+| Source centre voisin ou entrepôt retenue | n'importe quel poste en proposant une | **Refus du standard** : statut rouge et message — c'est le point dur du relevé R4 |
+| Poste déjà refusé | 2 postes en statut `ERR` | Message du standard visible, poste toujours dans la liste |
+| Poste sans aucune source | 2 postes | Pop-up vide, et non un message d'erreur |
+| Validation sans choisir de source | tous | Message « Retenir une source d'approvisionnement » |
+
+> **Écart local assumé** : en réel, un poste dont l'affectation réussit **quitte** la liste, puisque
+> la demande d'achat porte désormais une source. Le mock server conserve la ligne pour que Fiori
+> elements puisse rafraîchir l'instance renvoyée par l'action ; le poste reste donc visible avec le
+> statut « Source retenue ».
+
+## Ordre d'activation des objets ABAP
+
+Détermination de la source : voir [abap/README.md](abap/README.md) — 12 étapes, des éléments de
+données au service binding.
+
+Suivi de la chaîne et monitoring IDoc (inchangés, OData V2) :
+`ZI_ResaIdocLastStatus` → `ZI_ResaIdocMonitor` → `ZI_ResaChainCube` → `ZC_ResaChainTracking` →
+`ZC_ResaIdocTracking` → les deux extensions de métadonnées. Puis enregistrer `ZCRESATRACK_CDS` et
+`ZCRESAIDTRACK_CDS` dans `/IWFND/MAINT_SERVICE`.
+
+> **⚠️ Services V2 à dé-enregistrer** : `ZCRESASRC_CDS`, `ZCRESAKPI_CDS` et `ZCRESAIDKPI_CDS`
+> correspondent à l'Overview Page et aux quatre maquettes, abandonnées.
+
+> **⚠️ `ZI_ResaChainCube` a été reprise** : la jointure sur la table des commandes petite caisse a
+> été retirée et le type de document aval est désormais lu sur l'en-tête de la commande d'achat, au
+> lieu d'être écrit `ZDI5` en dur. Vérifier `PurchasingDocumentType` sur `I_PurchaseOrder` avant
+> activation.
 
 ## Navigation
 
-`npm run start:launchpad` ouvre un launchpad local contenant les trois applications du projet : toutes les navigations
-entre elles fonctionnent. Les cibles hors projet ouvrent une **page « Navigation à configurer »** qui rappelle quoi créer
-([navPlaceholder/targets.json](apps/resacockpit/webapp/test/navPlaceholder/targets.json)). Les emplacements concernés
-sont marqués `TODO NAVIGATION` dans les CDS et dans [flpSandbox.html](apps/resacockpit/webapp/test/flpSandbox.html).
-
 | # | Depuis | Vers (intention) | Mécanisme | Statut |
 |---|---|---|---|---|
-| 1 | Cockpit — carte « Accès rapides » | `ResaChain-track` | lien statique `card05_liens` | 🟢 opérationnelle |
-| 2 | Cockpit — carte « Accès rapides » | `ResaIdoc-monitor` | lien statique `card05_liens` | 🟢 opérationnelle |
-| 3 | Cockpit — carte « Accès rapides » | `PurchaseRequisition-convertAuto` (ME59N) | lien statique `card05_liens` | 🟠 **à configurer** |
-| 4 | Cockpit — carte « Postes les plus anciens » | `ResaChain-track` + clés du poste | `UI.Identification#Carte` | 🟢 opérationnelle |
-| 5 | Cockpit — graphiques postes en attente / conversion | `ResaChain-track` + dimensions cliquées | `UI.Identification` de `ZC_ResaChainQuery` | 🟢 opérationnelle |
-| 6 | Cockpit — graphique intégration | `ResaIdoc-monitor` + magasin | `UI.Identification` de `ZC_ResaIdocQuery` | 🟢 opérationnelle |
-| 7 | Suivi — pied de page de la page objet | `PurchaseRequisition-displayFactSheet` | `UI.Identification`, `Determining` | 🟠 **à configurer** |
-| 8 | Suivi — pied de page de la page objet | `PurchaseOrder-displayFactSheet` | `UI.Identification`, `Determining` | 🟠 **à configurer** |
-| 9 | Suivi / monitoring — barre d'outils | `ResaCockpit-display` | `UI.LineItem` `DataFieldForIntentBasedNavigation` | 🟢 opérationnelle |
+| 1 | Launchpad | `ResaSource-determine` | Tuile du catalogue `ZRESA_SRC_TC` | 🟢 opérationnelle |
+| 2 | Launchpad | Demandes d'achat (standard) | Catalogue SAP | 🟠 **à activer** |
+| 3 | Launchpad | Commandes d'achat (standard) | Catalogue SAP | 🟠 **à activer** |
+| 4 | Launchpad | `PurchaseRequisition-convertAuto` (ME59N) | Target mapping de type Transaction | 🟠 **à configurer** |
+| 5 | Suivi / monitoring — barre d'outils | `ResaSource-determine` | `UI.LineItem` `DataFieldForIntentBasedNavigation` | 🟢 opérationnelle |
+| 6 | Suivi — pied de page de la page objet | `PurchaseRequisition-displayFactSheet` | `UI.Identification`, `Determining` | 🟠 **à configurer** |
+| 7 | Suivi — pied de page de la page objet | `PurchaseOrder-displayFactSheet` | `UI.Identification`, `Determining` | 🟠 **à configurer** |
 
-### À configurer dans le Launchpad réel
+Les cibles hors projet ouvrent en local une **page « Navigation à configurer »** qui rappelle quoi
+créer ([navPlaceholder/targets.json](apps/srcappro/webapp/test/navPlaceholder/targets.json)).
 
-| Intention | À créer | Référence MO |
-|---|---|---|
-| `PurchaseRequisition-displayFactSheet` | Relever l'objet sémantique / action réels de la fiche SAP (catalogues achats) ; corriger le CDS s'ils diffèrent ; ajouter le catalogue SAP au rôle | §D2, §E3 |
-| `PurchaseOrder-displayFactSheet` | Idem pour la fiche de commande d'achat | §D2, §E3 |
-| `PurchaseRequisition-convertAuto` | Target mapping de type **Transaction** `ME59N` dans le catalogue Z, alias système, autorisation de transaction | §D3, §E3 |
-| `ResaCockpit-display`, `ResaChain-track`, `ResaIdoc-monitor` | Tuiles et target mappings des trois applications déployées, dans le catalogue Z (les inbounds sont dans les manifestes) | §E2 |
+> **⚠️ Les intentions des tuiles standard sont des hypothèses** (`PurchaseRequisition-manage`,
+> `PurchaseOrder-manage`) : relever les objets sémantiques et actions réels dans la *Fiori Apps
+> Reference Library* pour S/4HANA 2021 — c'est le relevé R7 du mode opératoire.
 
-La page de substitution n'existe que dans le launchpad local (`webapp/test/`, exclu du build et du déploiement).
+## Limites connues
 
-> **Pas de navigation IDoc → suivi détaillé** : les deux modèles restent volontairement disjoints (§1.3), le monitoring IDoc
-> ne porte pas le numéro de réservation.
-
-> **⚠️ Sensibilité des données IDoc (§E3)** : l'application `zlr.resaidoc` restitue des messages d'erreur techniques ;
-> restreindre sa tuile et son catalogue aux profils qui en ont l'usage.
-
-## Limites connues en local
-
-- Le filtre global de l'Overview Page n'agit que sur les cartes du modèle `mainModel` (comportement attendu, §B3).
-- Chaque application garde aussi son sandbox autonome (`npm run start:tracking`, `npm run start:idoc`) sans navigation sortante.
+- Les paramètres de contexte de l'action doivent être pré-alimentés par Fiori elements pour que la
+  pop-up soit filtrée sur le poste : comportement à confirmer sous SAPUI5 1.96 (relevé R5), avec
+  deux replis documentés.
+- Chaque application conserve son sandbox autonome (`npm start` dans son dossier), sans navigation
+  sortante.

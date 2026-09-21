@@ -24,7 +24,7 @@ define view ZC_ResaChainTracking
       PurchaseOrderItem,
       PurchaseOrderItemText,
 
-      -- aval effectif : commande d'achat (ZDI5) ou commande petite caisse (ZPC)
+      -- aval : commande d'achat, avec son type de document réel
       FollowOnDocument,
       FollowOnDocumentType,
 

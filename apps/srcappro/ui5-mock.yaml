@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+#
+# Launchpad local unique : détermination de la source (OData V4), suivi de la chaîne et
+# monitoring des IDocs (OData V2). Un seul serveur sert les trois applications et leurs
+# services mockés — c'est ce fichier que lancent toutes les commandes npm run start:*.
+#
+# Les tuiles standard de demande d'achat et de commande d'achat n'existent pas en local :
+# elles ouvrent la page de substitution (webapp/test/navPlaceholder).
+
+specVersion: "4.0"
+metadata:
+  name: zlr.srcappro
+type: application
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertErrors: false
+        ui5:
+          path:
+            - /resources
+            - /test-resources
+          url: https://ui5.sap.com
+          version: 1.96.50
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp
+        delay: 300
+    # applications cibles des navigations, servies depuis leurs propres projets
+    - name: fiori-tools-servestatic
+      afterMiddleware: compression
+      configuration:
+        paths:
+          - path: /apps/resatracking
+            src: ../resatracking/webapp
+          - path: /apps/resaidoc
+            src: ../resaidoc/webapp
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        mountPath: /
+        services:
+          # OData V4 — l'application de détermination de la source
+          - urlPath: /sap/opu/odata4/sap/zui_resasrc_o4/srvd/sap/zui_resasrc/0001
+            metadataPath: ./webapp/localService/ZUI_RESASRC/metadata.xml
+            mockdataPath: ./webapp/localService/ZUI_RESASRC/data
+            generateMockData: false
+          # OData V2 — applications conservées
+          - urlPath: /sap/opu/odata/sap/ZCRESATRACK_CDS
+            metadataPath: ../resatracking/webapp/localService/ZCRESATRACK_CDS/metadata.xml
+            mockdataPath: ../resatracking/webapp/localService/ZCRESATRACK_CDS/data
+            generateMockData: false
+          - urlPath: /sap/opu/odata/sap/ZCRESAIDTRACK_CDS
+            metadataPath: ../resaidoc/webapp/localService/ZCRESAIDTRACK_CDS/metadata.xml
+            mockdataPath: ../resaidoc/webapp/localService/ZCRESAIDTRACK_CDS/data
+            generateMockData: false
+        annotations:
+          - localPath: ../resatracking/webapp/localService/ZCRESATRACK_CDS/annotations.xml
+            urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESATRACK_CDS_VAN',Version='0001')/$value/
+          - localPath: ../resaidoc/webapp/localService/ZCRESAIDTRACK_CDS/annotations.xml
+            urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZCRESAIDTRACK_CDS_VAN',Version='0001')/$value/

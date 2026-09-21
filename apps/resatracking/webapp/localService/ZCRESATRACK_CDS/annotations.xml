@@ -43,9 +43,9 @@
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataFieldForIntentBasedNavigation">
-                            <PropertyValue Property="SemanticObject" String="ResaCockpit"/>
-                            <PropertyValue Property="Action" String="display"/>
-                            <PropertyValue Property="Label" String="Cockpit"/>
+                            <PropertyValue Property="SemanticObject" String="ResaSource"/>
+                            <PropertyValue Property="Action" String="determine"/>
+                            <PropertyValue Property="Label" String="Sources à déterminer"/>
                             <PropertyValue Property="RequiresContext" Bool="false"/>
                         </Record>
                         <Record Type="UI.DataField">

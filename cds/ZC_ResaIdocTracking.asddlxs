@@ -25,13 +25,13 @@ annotate view ZC_ResaIdocTracking with
   @UI.hidden: true
   IDocStatusText;
 
-  -- Navigation : bouton « Cockpit » de la barre d'outils (ResaCockpit-display, inbound du manifeste
-  -- de zovp.resacockpit). L'application elle-même répond à ResaIdoc-monitor (inbound de zlr.resaidoc),
-  -- cible de la carte d'intégration et de la carte « Accès rapides » du cockpit.
+  -- Navigation : bouton « Sources à déterminer » de la barre d'outils (ResaSource-determine, inbound
+  -- du manifeste de zlr.srcappro). L'application elle-même répond à ResaIdoc-monitor (inbound de
+  -- zlr.resaidoc). Remplace le bouton « Cockpit », l'Overview Page étant abandonnée.
   @UI: { lineItem:       [ { position: 10, label: 'N° IDoc', importance: #HIGH },
                            { type: #FOR_INTENT_BASED_NAVIGATION, requiresContext: false,
-                             semanticObject: 'ResaCockpit', semanticObjectAction: 'display',
-                             label: 'Cockpit' } ],
+                             semanticObject: 'ResaSource', semanticObjectAction: 'determine',
+                             label: 'Sources à déterminer' } ],
          selectionField: [ { position: 10 } ] }
   @UI.fieldGroup: [ { qualifier: 'GrpIdoc', position: 10 } ]
   IDocNumber;

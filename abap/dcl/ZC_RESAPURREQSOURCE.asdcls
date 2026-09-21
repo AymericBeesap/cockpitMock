@@ -1,0 +1,9 @@
+@EndUserText.label: 'Projection détermination de la source - contrôle d''accès'
+@MappingRole: true
+
+-- La projection hérite des conditions de la vue racine : une seule règle à maintenir.
+
+define role ZC_RESAPURREQSOURCE {
+  grant select on ZC_ResaPurReqSource
+    where inheriting conditions from entity ZR_ResaPurReqSource;
+}
